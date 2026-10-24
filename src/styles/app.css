@@ -104,6 +104,7 @@ nav a.active {
   padding: 10px 18px;
 }
 main {
+  overflow-wrap: anywhere;
   padding: 55px 36px 80px;
   min-height: 70vh;
 }
@@ -112,7 +113,7 @@ main:focus {
 }
 .hero {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
   gap: 45px;
   align-items: center;
   padding: 20px 0 60px;
@@ -220,7 +221,7 @@ main:focus {
 }
 .audience {
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
   align-items: center;
   border-top: 1px solid var(--line);
   padding-top: 35px;
@@ -238,6 +239,10 @@ main:focus {
   margin-bottom: 10px;
 }
 .tabs {
+  max-width: 100%;
+  flex-wrap: wrap;
+  align-self: center;
+  justify-self: start;
   display: flex;
   gap: 5px;
   background: #edf1f3;
@@ -245,6 +250,8 @@ main:focus {
   padding: 5px;
 }
 .tabs button {
+  max-width: 100%;
+  overflow-wrap: anywhere;
   border: 0;
   border-radius: 25px;
   background: transparent;
@@ -257,7 +264,7 @@ main:focus {
 }
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
   margin: 20px 0 45px;
 }
@@ -289,8 +296,8 @@ main:focus {
 .icon {
   display: grid;
   place-items: center;
-  width: 53px;
-  height: 53px;
+  width: 3rem;
+  height: 3rem;
   background: var(--blue);
   border-radius: 17px;
   font-size: 1.8rem;
@@ -390,6 +397,7 @@ progress {
   margin: 30px 0;
 }
 label {
+  min-width: 0;
   display: grid;
   font-size: 0.85rem;
   gap: 8px;
@@ -401,6 +409,8 @@ select {
   border-radius: 12px;
   background: white;
   color: var(--text);
+  min-width: 0;
+  width: 100%;
   max-width: 100%;
 }
 .resource-card {
@@ -432,13 +442,18 @@ footer p {
 }
 .skip {
   position: fixed;
-  top: -100px;
+  top: 0;
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
   background: white;
   padding: 15px;
   z-index: 5;
 }
 .skip:focus {
-  top: 0;
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 @media (max-width: 900px) {
   header {
@@ -494,7 +509,7 @@ footer p {
     padding: 7px 10px;
   }
   .hero {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     padding-top: 0;
   }
   .hero-art {
@@ -507,10 +522,10 @@ footer p {
     font-size: 2.5rem;
   }
   .cards {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .audience {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 15px;
   }
   .tabs {
@@ -539,6 +554,7 @@ footer p {
     font-size: 1.5rem;
   }
   .filters {
+    grid-template-columns: minmax(0, 1fr);
     display: grid;
   }
   main {
@@ -701,6 +717,8 @@ details p {
   gap: 12px;
 }
 .checklist input {
+  width: auto;
+  flex-shrink: 0;
   margin-top: 8px;
   accent-color: #47785d;
 }
@@ -728,7 +746,7 @@ details p {
 }
 @media (max-width: 650px) {
   .catalog-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
   .hero-illustration {
     margin-bottom: 15px;

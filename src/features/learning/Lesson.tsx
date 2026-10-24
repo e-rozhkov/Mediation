@@ -27,7 +27,7 @@ function LessonContent({ lesson }: { lesson: (typeof lessons)[number] }) {
     <article className="reading">
       <Link to="/learn">← Обучение</Link>
       <p className="eyebrow">
-        Модуль {module.order} · Урок {lesson.order} · 7–10 лет
+        Модуль {module.order} · Урок {lesson.order} · 7-10 лет
       </p>
       <h1>{lesson.title}</h1>
       <p className="lead">{lesson.intro}</p>

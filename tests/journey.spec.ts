@@ -69,9 +69,8 @@ test("главная → урок → кейс → памятка, восста�
     "kak-dogovoritsya.pdf",
   );
 });
-test("мобильный экран, поиск и 404", async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 812 });
-  for (const path of [
+test("адаптивная вёрстка, увеличение текста, поиск и 404", async ({ page }) => {
+  const paths = [
     "/",
     "/learn",
     "/practice",
@@ -79,14 +78,42 @@ test("мобильный экран, поиск и 404", async ({ page }) => {
     "/help",
     "/learn/nash-obshchiy-plan",
     "/practice/raznye-ozhidaniya",
+  ];
+  for (const { width, scale } of [
+    { width: 320, scale: 1 },
+    { width: 375, scale: 1 },
+    { width: 768, scale: 1 },
+    { width: 1440, scale: 1 },
+    { width: 375, scale: 2 },
+    { width: 768, scale: 2 },
   ]) {
-    await page.goto(path);
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth,
-      ),
-      path,
-    ).toBe(true);
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of paths) {
+      await page.goto(path);
+      if (scale === 2)
+        await page.addStyleTag({
+          content: ":root {font-size: 36px !important}",
+        });
+      const metrics = await page.evaluate(() => ({
+        overflow: document.documentElement.scrollWidth > innerWidth + 1,
+        clipped: [
+          ...document.querySelectorAll<HTMLElement>(
+            "h1,h2,h3,button,select,input,p",
+          ),
+        ]
+          .filter(
+            (el) =>
+              el.getClientRects().length &&
+              el.clientWidth > 0 &&
+              el.scrollWidth > el.clientWidth + 2,
+          )
+          .map((el) => el.textContent?.trim()),
+      }));
+      expect(metrics, `${path}, ${width}px, text ${scale * 100}%`).toEqual({
+        overflow: false,
+        clipped: [],
+      });
+    }
   }
   await page.goto("/resources");
   await page.getByRole("searchbox").fill("несуществующая памятка");
@@ -235,7 +262,9 @@ test("аудитории и фильтры: взрослый кейс не по�
   await page.goto("/resources?audience=children");
   await expect(page.locator(".catalog-grid .card")).toHaveCount(5);
   await page.getByLabel("Для кого").selectOption("teachers");
-  await page.getByRole("combobox", { name: "Тема", exact: true }).selectOption("Поддержка");
+  await page
+    .getByRole("combobox", { name: "Тема", exact: true })
+    .selectOption("Поддержка");
   await expect(page.locator(".catalog-grid .card")).toHaveCount(1);
   await expect(
     page.getByRole("heading", {

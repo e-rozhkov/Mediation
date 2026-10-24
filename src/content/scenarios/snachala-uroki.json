@@ -13,7 +13,7 @@
   "version": 1,
   "participants": ["Лёша", "Родитель"],
   "skill": "Рассказать об усталости и обсудить порядок действий",
-  "duration": "5–7 минут",
+  "duration": "5-7 минут",
   "first_step_id": "s1",
   "resource": "pauza",
   "steps": [

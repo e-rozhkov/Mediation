@@ -45,7 +45,7 @@ export const scenario = scenarios.find((x) => x.slug === "obshee-zadanie")!;
 export const resource = resources.find((x) => x.slug === "kak-dogovoritsya")!;
 export type Audience = "children" | "parents" | "teachers";
 export const audienceLabels: Record<Audience, string> = {
-  children: "Детям 7–10 лет",
+  children: "Детям 7-10 лет",
   parents: "Родителям",
   teachers: "Учителям",
 };

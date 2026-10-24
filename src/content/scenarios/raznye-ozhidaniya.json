@@ -11,7 +11,7 @@
   "version": 1,
   "participants": ["Родитель", "Учитель"],
   "skill": "Обсудить нагрузку через факты и вопросы",
-  "duration": "5–7 минут",
+  "duration": "5-7 минут",
   "first_step_id": "s1",
   "resource": "razgovor-vzroslyh",
   "steps": [

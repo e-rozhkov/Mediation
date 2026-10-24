@@ -27,7 +27,7 @@ export function Home() {
               Попробовать игру →
             </Link>
           </div>
-          <p className="small">Для детей 7–10 лет · Можно вместе со взрослым</p>
+          <p className="small">Для детей 7-10 лет · Можно вместе со взрослым</p>
         </div>
         <div className="hero-illustration">
           <ContentImage
@@ -91,7 +91,7 @@ export function Home() {
         </Link>
       </section>
       <aside className="note">
-        <strong>Договариваться — это навык.</strong>
+        <strong>Договариваться можно научиться.</strong>
         <p>
           Ему можно учиться маленькими шагами. Здесь нет таймера, оценок и
           неправильных чувств.

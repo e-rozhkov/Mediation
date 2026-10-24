@@ -52,7 +52,7 @@ export function Resources() {
               <ContentImage image={r.image} retry={false} />
               <p className="eyebrow">
                 {r.audience.includes("children")
-                  ? "Детям 7–10 лет"
+                  ? "Детям 7-10 лет"
                   : r.audience.map((a) => audienceLabels[a]).join(" · ")}{" "}
                 · A4
               </p>
@@ -81,7 +81,7 @@ export function Resource() {
         <Link to="/resources">← Памятки</Link>
       </div>
       <p className="eyebrow">
-        Точка диалога · Памятка · {child ? "7–10 лет" : "Для взрослых"}
+        Точка диалога · Памятка · {child ? "7-10 лет" : "Для взрослых"}
       </p>
       <h1>{resource.title}</h1>
       <p className="lead">{resource.intro}</p>
@@ -123,7 +123,7 @@ export function Resource() {
       </div>
       <p className="small">
         {child
-          ? "Учебный материал для детей 7–10 лет. Можно обсудить со взрослым."
+          ? "Учебный материал для детей 7-10 лет. Можно обсудить со взрослым."
           : "Учебный материал для родителей и учителей."}
       </p>
     </article>

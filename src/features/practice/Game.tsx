@@ -60,7 +60,7 @@ function GameContent({ scenario }: { scenario: Scenario }) {
       <Link to="/practice">← Все ситуации</Link>
       <p className="eyebrow">
         Практика · {scenario.duration} ·{" "}
-        {isChild ? "7–10 лет" : "Для родителей и учителей"}
+        {isChild ? "7-10 лет" : "Для родителей и учителей"}
       </p>
       <h1>{scenario.title}</h1>
       {!isChild && (
