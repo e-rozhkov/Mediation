@@ -1,3 +1,63 @@
-import React from 'react';import {createRoot} from 'react-dom/client';import {BrowserRouter,Routes,Route} from 'react-router-dom';import {Layout} from './components/Layout';import {Home} from './pages/Home';import {Learn,Practice,Mediation,Help,About,NotFound} from './pages/Static';import {Lesson} from './features/learning/Lesson';import {Game} from './features/practice/Game';import {Resources,Resource} from './features/resources/Resources';import './styles/theme.css';import './styles/app.css';
-class Boundary extends React.Component<{children:React.ReactNode},{failed:boolean}>{state={failed:false};static getDerivedStateFromError(){return {failed:true}}render(){return this.state.failed?<main><h1>Не удалось открыть страницу</h1><p>Попробуйте загрузить её ещё раз.</p><button onClick={()=>location.reload()}>Повторить</button></main>:this.props.children}}
-createRoot(document.getElementById('root')!).render(<React.StrictMode><Boundary><BrowserRouter><Routes><Route element={<Layout/>}><Route index element={<Home/>}/><Route path="mediation" element={<Mediation/>}/><Route path="learn" element={<Learn/>}/><Route path="learn/:slug" element={<Lesson/>}/><Route path="practice" element={<Practice/>}/><Route path="practice/:slug" element={<Game/>}/><Route path="resources" element={<Resources/>}/><Route path="resources/:slug" element={<Resource/>}/><Route path="help" element={<Help/>}/><Route path="about" element={<About/>}/><Route path="*" element={<NotFound/>}/></Route></Routes></BrowserRouter></Boundary></React.StrictMode>);
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Layout } from "./components/Layout";
+import { Home } from "./pages/Home";
+import {
+  Learn,
+  Practice,
+  Mediation,
+  Help,
+  About,
+  NotFound,
+} from "./pages/Static";
+import { Lesson } from "./features/learning/Lesson";
+import { ModuleQuiz } from "./features/learning/ModuleQuiz";
+import { Game } from "./features/practice/Game";
+import { Resources, Resource } from "./features/resources/Resources";
+import "./styles/theme.css";
+import "./styles/app.css";
+class Boundary extends React.Component<
+  { children: React.ReactNode },
+  { failed: boolean }
+> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? (
+      <main>
+        <h1>Не удалось открыть страницу</h1>
+        <p>Попробуйте загрузить её ещё раз.</p>
+        <button onClick={() => location.reload()}>Повторить</button>
+      </main>
+    ) : (
+      this.props.children
+    );
+  }
+}
+createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <Boundary>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="mediation" element={<Mediation />} />
+            <Route path="learn" element={<Learn />} />
+            <Route path="learn/module/:slug" element={<ModuleQuiz />} />
+            <Route path="learn/:slug" element={<Lesson />} />
+            <Route path="practice" element={<Practice />} />
+            <Route path="practice/:slug" element={<Game />} />
+            <Route path="resources" element={<Resources />} />
+            <Route path="resources/:slug" element={<Resource />} />
+            <Route path="help" element={<Help />} />
+            <Route path="about" element={<About />} />
+            <Route path="*" element={<NotFound />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </Boundary>
+  </React.StrictMode>,
+);
