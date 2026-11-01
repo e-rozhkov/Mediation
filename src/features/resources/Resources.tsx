@@ -1,11 +1,12 @@
 import { PdfDownload } from "../../components/PdfDownload";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { resources } from "../../lib/content";
 import { NotFound } from "../../pages/Static";
 import { ContentImage } from "../../components/ContentImage";
 export function Resources() {
   const [query, setQuery] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
   const [topic, setTopic] = useState("all");
   const visible = resources.filter(
     (r) =>
@@ -21,26 +22,70 @@ export function Resources() {
       <p className="lead">
         Восемь коротких памяток. Читайте, скачивайте или печатайте на A4.
       </p>
-      <div className="filters">
-        <label>
-          Поиск
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Например, договориться"
-          />
-        </label>
-        <label>
-          Тема
-          <select value={topic} onChange={(e) => setTopic(e.target.value)}>
-            <option value="all">Все темы</option>
+      <section className="resource-tools" aria-label="Поиск и темы памяток">
+        <div className="resource-search-group">
+          <label htmlFor="resource-search">Поиск памяток</label>
+          <div className="resource-search">
+            <svg
+              aria-hidden="true"
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="m16 16 4 4" />
+            </svg>
+            <input
+              ref={searchRef}
+              id="resource-search"
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Введите слово"
+            />
+            {query && (
+              <button
+                className="search-clear"
+                aria-label="Очистить поиск"
+                onClick={() => {
+                  setQuery("");
+                  searchRef.current?.focus({ preventScroll: true });
+                }}
+              >
+                Очистить
+              </button>
+            )}
+          </div>
+        </div>
+        <fieldset className="resource-topics">
+          <legend>Тема</legend>
+          <div className="topic-options">
+            <button
+              aria-pressed={topic === "all"}
+              onClick={() => setTopic("all")}
+            >
+              Все темы
+            </button>
             {[...new Set(resources.map((r) => r.topic))].map((t) => (
-              <option key={t}>{t}</option>
+              <button
+                key={t}
+                aria-pressed={topic === t}
+                onClick={() => setTopic(t)}
+              >
+                {t}
+              </button>
             ))}
-          </select>
-        </label>
-      </div>
+          </div>
+        </fieldset>
+      </section>
+      <p className="resource-count" role="status">
+        {visible.length
+          ? `Найдено памяток: ${visible.length}`
+          : "Ничего не найдено. Попробуйте другой запрос или тему."}
+      </p>
       {visible.length ? (
         <div className="catalog-grid">
           {visible.map((r) => (
@@ -54,9 +99,16 @@ export function Resources() {
           ))}
         </div>
       ) : (
-        <p role="status">
-          Ничего не найдено. Попробуйте другой запрос или фильтр.
-        </p>
+        <button
+          className="button"
+          onClick={() => {
+            setQuery("");
+            setTopic("all");
+            searchRef.current?.focus({ preventScroll: true });
+          }}
+        >
+          Сбросить поиск и тему
+        </button>
       )}
     </section>
   );

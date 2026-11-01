@@ -300,9 +300,7 @@ test("общие каталоги без выбора аудитории, пои
   await page.goto("/resources?audience=teachers");
   await expect(page.locator(".catalog-grid .card")).toHaveCount(8);
   await expect(page.getByRole("radio")).toHaveCount(0);
-  await page
-    .getByRole("combobox", { name: "Тема", exact: true })
-    .selectOption("Поддержка");
+  await page.getByRole("button", { name: "Поддержка", exact: true }).click();
   await expect(page.locator(".catalog-grid .card")).toHaveCount(2);
   await page.getByRole("searchbox").fill("в классе");
   await expect(page.locator(".catalog-grid .card")).toHaveCount(1);
@@ -494,4 +492,138 @@ test("Главная в меню и общие разделы без возра�
   await expect(
     nav.getByRole("link", { name: "Главная", exact: true }),
   ).toHaveAttribute("aria-current", "page");
+});
+
+test("содержание урока прокручивает к теме с учётом закреплённого меню", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/learn/kto-pomogaet");
+  await page.evaluate(() => document.fonts.ready);
+  await page.getByText("Содержание урока", { exact: true }).click();
+  const topic = page.getByRole("button", {
+    name: "Перейти к теме: Что сообщают эмоции",
+    exact: true,
+  });
+  await topic.click();
+  await expect(
+    page.getByRole("heading", { name: "Что сообщают эмоции", exact: true }),
+  ).toBeVisible();
+  const panel = page.getByRole("region", { name: "Урок", exact: true });
+  await expect(panel).toBeFocused();
+  await expect
+    .poll(async () =>
+      page.evaluate(() => {
+        const header = document
+          .querySelector("header")!
+          .getBoundingClientRect();
+        const heading = document
+          .querySelector(".lesson-page .panel h2")!
+          .getBoundingClientRect();
+        const panelTop = document
+          .querySelector(".lesson-page .panel")!
+          .getBoundingClientRect().top;
+        const scrollEnd =
+          Math.ceil(scrollY + innerHeight) >=
+          document.documentElement.scrollHeight;
+        const aligned =
+          Math.abs(panelTop - header.bottom - 16) < 3 || scrollEnd;
+        return (
+          aligned &&
+          header.top >= -1 &&
+          Math.abs(header.top) < 1 &&
+          heading.top >= header.bottom &&
+          heading.bottom <= innerHeight
+        );
+      }),
+    )
+    .toBe(true);
+  // Re-selecting the current theme must scroll too, even though the theme index is unchanged.
+  await topic.click();
+  await expect(panel).toBeFocused();
+  await expect
+    .poll(async () =>
+      page.evaluate(
+        () =>
+          document
+            .querySelector(".lesson-page .panel h2")!
+            .getBoundingClientRect().bottom < innerHeight,
+      ),
+    )
+    .toBe(true);
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page
+    .getByRole("button", {
+      name: "Перейти к теме: Факты и оценки",
+      exact: true,
+    })
+    .click();
+  await expect(panel).toBeFocused();
+  await expect(
+    page.getByRole("heading", { name: "Факты и оценки", exact: true }),
+  ).toBeInViewport();
+});
+test("верхнее меню остаётся на месте при прокрутке и смене разделов", async ({
+  page,
+}) => {
+  for (const width of [375, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/learn");
+    await page.evaluate(() => document.fonts.ready);
+    const header = page.locator("header");
+    const before = await header.boundingBox();
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect
+      .poll(async () => Math.abs((await header.boundingBox())!.y))
+      .toBeLessThan(1);
+    const nav = page.getByRole("navigation", { name: "Основная навигация" });
+    for (const name of ["О медиации", "Памятки", "Главная", "Обучение"]) {
+      await nav.getByRole("link", { name, exact: true }).click();
+      await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
+      const after = await header.boundingBox();
+      expect(after!.x).toBeCloseTo(before!.x, 1);
+      expect(after!.y).toBeCloseTo(0, 1);
+      expect(after!.width).toBeCloseTo(before!.width, 1);
+      expect(after!.height).toBeCloseTo(before!.height, 1);
+      await expect(
+        nav.getByRole("link", { name, exact: true }),
+      ).toHaveAttribute("aria-current", "page");
+      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    }
+  }
+});
+
+test("поиск памяток, видимые темы и очистка запроса работают вместе", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.goto("/resources");
+  await expect(page.getByRole("combobox")).toHaveCount(0);
+  await expect(
+    page.getByRole("button", { name: "Все темы", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByRole("status")).toContainText("8");
+  await page.getByRole("button", { name: "Поддержка", exact: true }).click();
+  await expect(page.locator(".catalog-grid .card")).toHaveCount(2);
+  await page.getByRole("searchbox", { name: "Поиск памяток" }).fill("в классе");
+  await expect(page.locator(".catalog-grid .card")).toHaveCount(1);
+  await page
+    .getByRole("button", { name: "Очистить поиск", exact: true })
+    .click();
+  await expect(page.getByRole("searchbox")).toBeFocused();
+  await expect(page.locator(".catalog-grid .card")).toHaveCount(2);
+  await page.getByRole("searchbox").fill("несуществующее слово");
+  await expect(page.getByRole("status")).toContainText("Ничего не найдено");
+  await page.getByRole("button", { name: "Сбросить поиск и тему" }).click();
+  await expect(page.getByRole("searchbox")).toHaveValue("");
+  await expect(
+    page.getByRole("button", { name: "Все темы", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".catalog-grid .card")).toHaveCount(8);
+  await page.getByRole("button", { name: "Чувства", exact: true }).focus();
+  await page.keyboard.press("Enter");
+  await expect(
+    page.getByRole("button", { name: "Чувства", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".catalog-grid .card")).toHaveCount(1);
 });

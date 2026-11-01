@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useLayoutEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { lessons, modules } from "../../lib/content";
 import { load, save, storageWarning } from "../../lib/progress";
@@ -15,6 +15,20 @@ export function Lesson() {
 }
 function LessonContent({ lesson }: { lesson: (typeof lessons)[number] }) {
   const [screen, setScreen] = useState(0);
+  const panelRef = useRef<HTMLElement>(null);
+  const [topicNavigation, setTopicNavigation] = useState(0);
+  useLayoutEffect(() => {
+    if (!topicNavigation) return;
+    const panel = panelRef.current;
+    if (!panel) return;
+    panel.focus({ preventScroll: true });
+    panel.scrollIntoView({
+      block: "start",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
+  }, [topicNavigation]);
   const [choice, setChoice] = useState("");
   const [done, setDone] = useState(
     () => load().lessons[lesson.slug] === lesson.version,
@@ -41,7 +55,10 @@ function LessonContent({ lesson }: { lesson: (typeof lessons)[number] }) {
                     className="text-button"
                     aria-label={`Перейти к теме: ${section.title}`}
                     aria-current={index === screen ? "step" : undefined}
-                    onClick={() => setScreen(index)}
+                    onClick={() => {
+                      setScreen(index);
+                      setTopicNavigation((value) => value + 1);
+                    }}
                   >
                     {section.title}
                   </button>
@@ -51,7 +68,7 @@ function LessonContent({ lesson }: { lesson: (typeof lessons)[number] }) {
           </nav>
         </details>
       )}
-      <section className="panel" aria-label="Урок">
+      <section ref={panelRef} tabIndex={-1} className="panel" aria-label="Урок">
         <p className="eyebrow">
           {isQuestion
             ? "Проверим себя"
