@@ -8,8 +8,6 @@
     "src": "/images/conflict-ball.webp",
     "alt": "Лена и Артём спорят о том, чья очередь играть в мяч; рядом находится учитель."
   },
-  "age_min": 7,
-  "age_max": 10,
   "order": 1,
   "lessons": ["kto-pomogaet", "pravila-razgovora"],
   "questions": [

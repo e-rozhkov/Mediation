@@ -285,25 +285,26 @@ for (const module of modules)
       page.getByText("Проверка пройдена", { exact: true }),
     ).toBeVisible();
   });
-test("аудитории и фильтры: взрослый кейс не попадает детям", async ({
-  page,
-}) => {
+test("общие каталоги без выбора аудитории, поиск и тема", async ({ page }) => {
   await page.goto("/");
-  await page.getByRole("button", { name: "Детям", exact: true }).click();
-  await page.getByRole("link", { name: "Выбрать ситуацию" }).click();
   await expect(
-    page.getByRole("heading", { name: "Разные ожидания", exact: true }),
+    page.getByRole("button", { name: "Детям", exact: true }),
   ).toHaveCount(0);
-  await page.getByLabel("Для кого").selectOption("parents");
+  await page.getByRole("link", { name: "Выбрать ситуацию" }).click();
+  await expect(page.locator(".catalog-grid .card")).toHaveCount(5);
   await expect(
     page.getByRole("heading", { name: "Разные ожидания", exact: true }),
   ).toBeVisible();
-  await page.goto("/resources?audience=children");
+  await page.goto("/practice?audience=children");
   await expect(page.locator(".catalog-grid .card")).toHaveCount(5);
-  await page.getByLabel("Для кого").selectOption("teachers");
+  await page.goto("/resources?audience=teachers");
+  await expect(page.locator(".catalog-grid .card")).toHaveCount(8);
+  await expect(page.getByRole("radio")).toHaveCount(0);
   await page
     .getByRole("combobox", { name: "Тема", exact: true })
     .selectOption("Поддержка");
+  await expect(page.locator(".catalog-grid .card")).toHaveCount(2);
+  await page.getByRole("searchbox").fill("в классе");
   await expect(page.locator(".catalog-grid .card")).toHaveCount(1);
   await expect(
     page.getByRole("heading", {
@@ -459,4 +460,38 @@ test("локальный Manrope загружен, включая кирилли
   const response = await page.request.get("/fonts/Manrope-variable.ttf");
   expect(response.ok()).toBe(true);
   expect((await response.body()).length).toBeGreaterThan(100000);
+});
+
+test("Главная в меню и общие разделы без возрастных подписей", async ({
+  page,
+}) => {
+  for (const path of [
+    "/",
+    "/learn",
+    "/learn/kto-pomogaet",
+    "/learn/module/kto-pomogaet-module",
+    "/practice",
+    "/practice/raznye-ozhidaniya",
+    "/resources",
+    "/resources/pauza",
+    "/about",
+  ]) {
+    await page.goto(path);
+    await expect(page.locator("body")).not.toContainText("7–10");
+    await expect(
+      page.getByRole("group", { name: "Для кого материалы" }),
+    ).toHaveCount(0);
+    await expect(page.getByRole("radio")).toHaveCount(0);
+  }
+  const nav = page.getByRole("navigation", { name: "Основная навигация" });
+  await expect(
+    nav.getByRole("link", { name: "Главная", exact: true }),
+  ).toHaveAttribute("href", "/");
+  await page.goto("/learn/kto-pomogaet");
+  await expect(page.locator("main")).not.toContainText("Урок 1");
+  await nav.getByRole("link", { name: "Главная", exact: true }).click();
+  await expect(page).toHaveURL("/");
+  await expect(
+    nav.getByRole("link", { name: "Главная", exact: true }),
+  ).toHaveAttribute("aria-current", "page");
 });

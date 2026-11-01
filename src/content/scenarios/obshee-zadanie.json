@@ -1,7 +1,5 @@
 {
   "audience": ["children", "parents", "teachers"],
-  "age_min": 7,
-  "age_max": 10,
   "id": "poster",
   "slug": "obshee-zadanie",
   "version": 1,

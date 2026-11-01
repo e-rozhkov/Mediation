@@ -24,12 +24,11 @@ function LessonContent({ lesson }: { lesson: (typeof lessons)[number] }) {
   const next = module.lessons[module.lessons.indexOf(lesson.slug) + 1];
   const isQuestion = screen === lesson.blocks.length;
   return (
-    <article className="reading">
+    <article className="reading lesson-page">
       <Link to="/learn">← Обучение</Link>
-      <p className="eyebrow">Урок {lesson.order} · 7–10 лет</p>
       <h1>{lesson.title}</h1>
       <p className="lead">{lesson.intro}</p>
-      <p className="badge">Можно пройти вместе со взрослым</p>
+      <p className="badge">Можно изучать самостоятельно или вместе</p>
       <ContentImage image={lesson.image} priority />
       {lesson.sections && (
         <details className="lesson-contents">
@@ -151,7 +150,7 @@ function LessonContent({ lesson }: { lesson: (typeof lessons)[number] }) {
         )}
       </section>
       <details className="adult-note">
-        <summary>Для родителей и учителей</summary>
+        <summary>Пояснение к уроку</summary>
         <p>{lesson.adult_note}</p>
       </details>
       {storageWarning && <p role="status">{storageWarning}</p>}

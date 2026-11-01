@@ -1,20 +1,17 @@
 import { PdfDownload } from "../../components/PdfDownload";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { resources, audienceLabels } from "../../lib/content";
+import { resources } from "../../lib/content";
 import { NotFound } from "../../pages/Static";
 import { ContentImage } from "../../components/ContentImage";
-import { AudienceFilter, useAudience } from "../../components/AudienceFilter";
 export function Resources() {
   const [query, setQuery] = useState("");
-  const { audience, setAudience } = useAudience();
   const [topic, setTopic] = useState("all");
   const visible = resources.filter(
     (r) =>
       (r.title + " " + r.blocks.join(" ") + " " + r.topic)
         .toLowerCase()
         .includes(query.trim().toLowerCase()) &&
-      (audience === "all" || r.audience.includes(audience)) &&
       (topic === "all" || topic === r.topic),
   );
   return (
@@ -34,7 +31,6 @@ export function Resources() {
             placeholder="Например, договориться"
           />
         </label>
-        <AudienceFilter value={audience} onChange={setAudience} />
         <label>
           Тема
           <select value={topic} onChange={(e) => setTopic(e.target.value)}>
@@ -50,12 +46,7 @@ export function Resources() {
           {visible.map((r) => (
             <Link className="card" key={r.id} to={`/resources/${r.slug}`}>
               <ContentImage image={r.image} retry={false} />
-              <p className="eyebrow">
-                {r.audience.includes("children")
-                  ? "Детям 7–10 лет"
-                  : r.audience.map((a) => audienceLabels[a]).join(" · ")}{" "}
-                · A4
-              </p>
+              <p className="eyebrow">Памятка · A4</p>
               <h2>{r.title}</h2>
               <p>{r.intro}</p>
               <span>Читать и печатать →</span>
@@ -80,9 +71,7 @@ export function Resource() {
       <div className="no-print">
         <Link to="/resources">← Памятки</Link>
       </div>
-      <p className="eyebrow">
-        Точка диалога · Памятка · {child ? "7–10 лет" : "Для взрослых"}
-      </p>
+      <p className="eyebrow">Точка диалога · Памятка</p>
       <h1>{resource.title}</h1>
       <p className="lead">{resource.intro}</p>
       <div className="no-print">
@@ -122,9 +111,7 @@ export function Resource() {
         <PdfDownload key={resource.pdf} path={resource.pdf} />
       </div>
       <p className="small">
-        {child
-          ? "Учебный материал для детей 7–10 лет. Можно обсудить со взрослым."
-          : "Учебный материал для родителей и учителей."}
+        Учебный материал для самостоятельного или совместного разбора.
       </p>
     </article>
   );

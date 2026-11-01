@@ -8,8 +8,6 @@
     "src": "/images/classroom.webp",
     "alt": "Учитель помогает ученице разобраться с заданием."
   },
-  "age_min": 7,
-  "age_max": 10,
   "version": 1,
   "module": "kto-pomogaet-module",
   "order": 2,

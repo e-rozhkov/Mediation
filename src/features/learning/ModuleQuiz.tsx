@@ -63,7 +63,7 @@ function Quiz({ module }: { module: (typeof modules)[number] }) {
             Попробовать ещё раз
           </button>
           <p>
-            <Link to="/practice?audience=children">Перейти к практике →</Link>
+            <Link to="/practice">Перейти к практике →</Link>
           </p>
         </section>
       ) : (

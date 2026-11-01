@@ -1,9 +1,7 @@
 import { MediationContent } from "../components/MediationContent";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { ContentImage } from "../components/ContentImage";
 export function Home() {
-  const [audience, setAudience] = useState("children");
   return (
     <>
       <section className="hero">
@@ -24,11 +22,11 @@ export function Home() {
             <Link className="button primary" to="/learn/kto-pomogaet">
               Начать учиться <span>→</span>
             </Link>
-            <Link className="button" to="/practice?audience=children">
+            <Link className="button" to="/practice">
               Попробовать игру →
             </Link>
           </div>
-          <p className="small">Для детей 7–10 лет · Можно вместе со взрослым</p>
+          <p className="small">В своём темпе, самостоятельно или вместе</p>
         </div>
         <div className="hero-illustration">
           <ContentImage
@@ -48,32 +46,12 @@ export function Home() {
         <h2 id="home-mediation-title">О медиации</h2>
         <MediationContent home />
       </section>
-      <section className="audience">
-        <div>
-          <p className="eyebrow">Вместе проще</p>
-          <h2>С чего начнём?</h2>
-        </div>
-        <div role="group" aria-label="Для кого материалы" className="tabs">
-          {[
-            ["children", "Детям"],
-            ["parents", "Родителям"],
-            ["teachers", "Учителям"],
-          ].map(([id, label]) => (
-            <button
-              key={id}
-              aria-pressed={audience === id}
-              onClick={() => setAudience(id)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+      <section className="learning-start">
+        <p className="eyebrow">Вместе проще</p>
+        <h2>С чего начнём?</h2>
         <p>
-          {audience === "children"
-            ? "Не всегда легко договориться. Давай попробуем на знакомой школьной истории."
-            : audience === "parents"
-              ? "Пройдите историю вместе с ребёнком. Спросите, что чувствуют герои, и дайте время на ответ."
-              : "Обсудите историю с классом без оценок личности. Каждый может предложить свой вариант и сделать паузу."}
+          Выберите урок, учебную ситуацию или памятку. Все материалы открыты
+          каждому.
         </p>
       </section>
       <section className="cards">
@@ -86,14 +64,14 @@ export function Home() {
           </p>
           <span>Открыть урок →</span>
         </Link>
-        <Link className="card" to={`/practice?audience=${audience}`}>
+        <Link className="card" to="/practice">
           <span className="icon green-icon">♧</span>
           <p className="eyebrow">Попробовать</p>
           <h3>А как поступишь ты?</h3>
           <p>Знакомая история, твои решения и время подумать.</p>
           <span>Выбрать ситуацию →</span>
         </Link>
-        <Link className="card" to={`/resources?audience=${audience}`}>
+        <Link className="card" to="/resources">
           <span className="icon peach-icon">▤</span>
           <p className="eyebrow">Взять с собой</p>
           <h3>Подсказка под рукой</h3>

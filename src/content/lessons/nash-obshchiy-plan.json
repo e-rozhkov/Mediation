@@ -8,8 +8,6 @@
     "src": "/images/playground.webp",
     "alt": "Дети обсуждают выбор игры на школьной площадке."
   },
-  "age_min": 7,
-  "age_max": 10,
   "version": 1,
   "module": "kak-dogovoritsya-module",
   "order": 2,

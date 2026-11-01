@@ -45,13 +45,6 @@ export const modules = parseAll(
 export const lesson = lessons.find((x) => x.slug === "kto-pomogaet")!;
 export const scenario = scenarios.find((x) => x.slug === "obshee-zadanie")!;
 export const resource = resources.find((x) => x.slug === "kak-dogovoritsya")!;
-export type Audience = "children" | "parents" | "teachers";
-export const audienceLabels: Record<Audience, string> = {
-  children: "Детям 7–10 лет",
-  parents: "Родителям",
-  teachers: "Учителям",
-};
-
 export const mediationPage = mediationPageSchema.parse(mediationData);
 
 export function quizProgressKey(module: { slug: string; version: number }) {

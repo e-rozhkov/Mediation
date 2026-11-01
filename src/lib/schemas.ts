@@ -5,8 +5,6 @@ const base = z.object({
   slug: text,
   title: text,
   audience: z.array(z.enum(["children", "parents", "teachers"])).min(1),
-  age_min: z.literal(7).optional(),
-  age_max: z.literal(10).optional(),
   intro: text,
   image: z.object({ src: text, alt: text }),
 });

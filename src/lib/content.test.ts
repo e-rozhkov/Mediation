@@ -42,7 +42,7 @@ describe("каталог и графы", () => {
     s.steps.push({ ...s.steps[3], id: "orphan" });
     expect(() => validateGraph(s)).toThrow();
   });
-  it("в детской подборке нет кейса взрослых", () => {
+  it("сценарий разговора взрослых помечен для контекстного пояснения", () => {
     expect(
       scenarios
         .filter((s) => s.audience.includes("children"))

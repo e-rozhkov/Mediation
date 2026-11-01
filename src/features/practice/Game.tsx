@@ -58,14 +58,12 @@ function GameContent({ scenario }: { scenario: Scenario }) {
   return (
     <article className="reading">
       <Link to="/practice">← Все ситуации</Link>
-      <p className="eyebrow">
-        Практика · {scenario.duration} ·{" "}
-        {isChild ? "7–10 лет" : "Для родителей и учителей"}
-      </p>
+      <p className="eyebrow">Практика · {scenario.duration}</p>
       <h1>{scenario.title}</h1>
       {!isChild && (
         <p className="badge adult-badge">
-          Материал для взрослых. Не входит в детский путь.
+          История о решениях родителя и учителя. Ребёнок не отвечает за
+          разрешение разногласия между взрослыми.
         </p>
       )}
       <p className="lead">{scenario.intro}</p>
@@ -159,7 +157,7 @@ function GameContent({ scenario }: { scenario: Scenario }) {
         </section>
       )}
       <details className="adult-note">
-        <summary>Пояснение для взрослых</summary>
+        <summary>Пояснение к ситуации</summary>
         <p>{scenario.adult_note}</p>
       </details>
       <div className="actions">

@@ -32,7 +32,7 @@ for source in sorted((root / 'src/content/resources').glob('*.json')):
         title=data['title'], author='Точка диалога',
     )
     story = [
-        Paragraph('Точка диалога · Памятка · ' + ('7–10 лет' if child else 'Для взрослых'), small),
+        Paragraph('Точка диалога · Памятка', small),
         Paragraph(escape(data['title']), title),
         Paragraph(escape(data['intro']), body), Spacer(1, 8),
     ]

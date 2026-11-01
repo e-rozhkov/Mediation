@@ -37,11 +37,6 @@ for (const [folder, schema] of groups) {
       if (file !== `${data.slug}.json`)
         throw Error("Имя файла не совпадает со slug");
       records[folder].push({ file: path, data });
-      if (
-        data.audience.includes("children") &&
-        (data.age_min !== 7 || data.age_max !== 10)
-      )
-        throw Error("Нужен возраст 7–10");
       fileExists(data.image.src);
       if (
         "sections" in data &&

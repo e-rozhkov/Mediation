@@ -219,48 +219,22 @@ main:focus {
   font-size: 0.8rem;
   line-height: 1.5;
 }
-.audience {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-  align-items: center;
+.learning-start {
+  display: block;
   border-top: 1px solid var(--line);
   padding-top: 35px;
 }
-.audience p:last-child {
+.learning-start p:last-child {
   grid-column: 1/-1;
   max-width: 720px;
   color: var(--muted);
   font-size: 0.95rem;
 }
-.audience h2 {
+.learning-start h2 {
   margin-bottom: 15px;
 }
-.audience .eyebrow {
+.learning-start .eyebrow {
   margin-bottom: 10px;
-}
-.tabs {
-  max-width: 100%;
-  flex-wrap: wrap;
-  align-self: center;
-  justify-self: start;
-  display: flex;
-  gap: 5px;
-  background: #edf1f3;
-  border-radius: 30px;
-  padding: 5px;
-}
-.tabs button {
-  max-width: 100%;
-  overflow-wrap: anywhere;
-  border: 0;
-  border-radius: 25px;
-  background: transparent;
-  padding: 9px 20px;
-  font-size: 0.85rem;
-}
-.tabs button[aria-pressed="true"] {
-  background: white;
-  box-shadow: 0 2px 6px #0000000d;
 }
 .cards {
   display: grid;
@@ -524,15 +498,9 @@ footer p {
   .cards {
     grid-template-columns: minmax(0, 1fr);
   }
-  .audience {
+  .learning-start {
     grid-template-columns: minmax(0, 1fr);
     gap: 15px;
-  }
-  .tabs {
-    justify-self: start;
-  }
-  .tabs button {
-    padding: 8px 14px;
   }
   .panel {
     padding: 22px;
@@ -1040,4 +1008,27 @@ dd {
   .table-wrap th:first-child {
     width: 100%;
   }
+}
+@media (max-width: 1100px) {
+  header {
+    flex-wrap: wrap;
+  }
+  header > nav {
+    order: 3;
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+  header > .help-link {
+    margin-left: auto;
+  }
+}
+
+header > nav {
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.lesson-page > a:first-child {
+  display: inline-block;
+  margin-bottom: 24px;
 }

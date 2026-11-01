@@ -17,6 +17,9 @@ export function Layout() {
           <span className="brand-mark">тд</span>Точка диалога
         </Link>
         <nav aria-label="Основная навигация">
+          <NavLink to="/" end>
+            Главная
+          </NavLink>
           <NavLink to="/mediation">О медиации</NavLink>
           <NavLink to="/learn">Обучение</NavLink>
           <NavLink to="/practice">Практика</NavLink>
@@ -34,7 +37,7 @@ export function Layout() {
         <Link className="brand" to="/">
           Точка диалога
         </Link>
-        <p>Учимся слышать друг друга. Для детей 7–10 лет и взрослых.</p>
+        <p>Учимся слышать друг друга. Для детей и взрослых.</p>
         <Link to="/about">О проекте</Link>
         <span>Учебная демонстрация · 2026</span>
       </footer>

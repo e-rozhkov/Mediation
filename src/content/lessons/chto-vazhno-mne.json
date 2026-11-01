@@ -8,8 +8,6 @@
     "src": "/images/dialogue.webp",
     "alt": "Маша и Саша вместе делают школьный плакат."
   },
-  "age_min": 7,
-  "age_max": 10,
   "version": 1,
   "module": "chto-vazhno-kazhdomu",
   "order": 1,
