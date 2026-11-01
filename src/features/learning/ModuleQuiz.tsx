@@ -34,7 +34,6 @@ function Quiz({ module }: { module: (typeof modules)[number] }) {
   return (
     <article className="reading">
       <Link to="/learn">← Все модули</Link>
-      <p className="eyebrow">Проверим себя · Без оценок и таймера</p>
       <h1>{module.title}</h1>
       {finished ? (
         <section className="panel">

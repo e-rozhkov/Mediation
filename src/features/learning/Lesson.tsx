@@ -69,11 +69,11 @@ function LessonContent({ lesson }: { lesson: (typeof lessons)[number] }) {
         </details>
       )}
       <section ref={panelRef} tabIndex={-1} className="panel" aria-label="Урок">
-        <p className="eyebrow">
-          {isQuestion
-            ? "Проверим себя"
-            : `Тема ${screen + 1} из ${lesson.blocks.length}`}
-        </p>
+        {!isQuestion && (
+          <p className="eyebrow">
+            Тема {screen + 1} из {lesson.blocks.length}
+          </p>
+        )}
         {!isQuestion ? (
           <>
             {lesson.sections && <h2>{lesson.sections[screen].title}</h2>}

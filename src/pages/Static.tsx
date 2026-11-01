@@ -21,7 +21,6 @@ export function Learn() {
   const [progress, setProgress] = useState(load);
   return (
     <section>
-      <p className="eyebrow">Узнать и понять</p>
       <h1>Учимся договариваться</h1>
       <p className="lead">
         Уроки для детей и взрослых: слушаем, понимаем желания и ищем общий план.
@@ -29,7 +28,6 @@ export function Learn() {
       </p>
       {modules.map((m) => (
         <section className="module-section" key={m.id}>
-          <p className="eyebrow">Раздел обучения · 2 урока</p>
           <h2>{m.title}</h2>
           <div className="catalog-grid">
             {m.lessons.map((slug) => {
@@ -38,7 +36,6 @@ export function Learn() {
               return (
                 <Link className="card" key={slug} to={`/learn/${slug}`}>
                   <ContentImage image={lesson.image} retry={false} />
-                  <p className="eyebrow">Короткий урок</p>
                   <h3>{lesson.title}</h3>
                   <p>{lesson.intro}</p>
                   <span>
@@ -92,7 +89,6 @@ export function Learn() {
 export function Practice() {
   return (
     <section>
-      <p className="eyebrow">Попробовать на практике</p>
       <h1>А как поступишь ты?</h1>
       <p className="lead">
         Пять историй о знакомых разногласиях. Выбирай реплики и узнавай, что
@@ -102,7 +98,6 @@ export function Practice() {
         {scenarios.map((s) => (
           <Link className="card" key={s.id} to={`/practice/${s.slug}`}>
             <ContentImage image={s.image} retry={false} />
-            <p className="eyebrow">Учебная ситуация · {s.duration}</p>
             <h2>{s.title}</h2>
             <p>{s.intro}</p>
             <p>{s.skill}</p>
@@ -131,7 +126,6 @@ export function Mediation() {
 export function Help() {
   return (
     <article className="reading">
-      <p className="eyebrow">Ты не один</p>
       <h1>Как получить помощь</h1>
       <p className="lead">
         Если возникла трудная или небезопасная ситуация, не оставайтесь с ней
@@ -165,7 +159,6 @@ export function Help() {
 export function About() {
   return (
     <article className="reading">
-      <p className="eyebrow">О проекте</p>
       <h1>Точка диалога</h1>
       <p className="lead">
         Учебный демонстрационный проект о школьной медиации для всех, кто хочет

@@ -250,9 +250,6 @@ main:focus {
 .learning-start h2 {
   margin-bottom: 15px;
 }
-.learning-start .eyebrow {
-  margin-bottom: 10px;
-}
 .cards {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -276,15 +273,12 @@ main:focus {
   font-size: 0.88rem;
   color: var(--muted);
 }
-.card .eyebrow {
-  font-size: 0.65rem;
-  margin-top: 25px;
-}
 .card > span:last-child {
   font-size: 0.82rem;
   font-weight: 700;
 }
 .icon {
+  margin-bottom: 24px;
   display: grid;
   place-items: center;
   width: 3rem;
@@ -807,9 +801,6 @@ details p {
   border-top: 1px solid var(--line);
   padding: 40px 0;
 }
-.home-mediation > .eyebrow {
-  margin-bottom: 12px;
-}
 .mediation-content > .lead {
   max-width: 100%;
   font-size: 1rem;
@@ -1048,7 +1039,7 @@ header > nav {
   min-width: 0;
   flex-wrap: wrap;
 }
-.lesson-page > a:first-child {
+.reading > a:first-child {
   display: inline-block;
   margin-bottom: 24px;
 }
@@ -1165,4 +1156,8 @@ header > nav {
   .topic-options button {
     padding: 10px 14px;
   }
+}
+
+.printable > .no-print:first-child {
+  margin-bottom: 24px;
 }

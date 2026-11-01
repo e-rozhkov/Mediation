@@ -58,7 +58,6 @@ function GameContent({ scenario }: { scenario: Scenario }) {
   return (
     <article className="reading">
       <Link to="/practice">← Все ситуации</Link>
-      <p className="eyebrow">Практика · {scenario.duration}</p>
       <h1>{scenario.title}</h1>
       {!isChild && (
         <p className="badge adult-badge">
@@ -128,7 +127,6 @@ function GameContent({ scenario }: { scenario: Scenario }) {
         </section>
       ) : (
         <section className="panel">
-          <p className="eyebrow">Разговор завершён</p>
           <h2>Теперь есть с чего начать</h2>
           <p>{scenario.takeaway}</p>
           <details>

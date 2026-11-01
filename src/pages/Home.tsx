@@ -6,7 +6,6 @@ export function Home() {
     <>
       <section className="hero">
         <div>
-          <p className="eyebrow">Слушать. Понимать. Договариваться.</p>
           <h1>
             У каждого есть
             <br />
@@ -42,12 +41,10 @@ export function Home() {
         className="home-mediation"
         aria-labelledby="home-mediation-title"
       >
-        <p className="eyebrow">Понимаем друг друга</p>
         <h2 id="home-mediation-title">О медиации</h2>
         <MediationContent home />
       </section>
       <section className="learning-start">
-        <p className="eyebrow">Вместе проще</p>
         <h2>С чего начнём?</h2>
         <p>
           Выберите урок, учебную ситуацию или памятку. Все материалы открыты
@@ -57,7 +54,6 @@ export function Home() {
       <section className="cards">
         <Link className="card" to="/learn/kto-pomogaet">
           <span className="icon">☀</span>
-          <p className="eyebrow">Обучение</p>
           <h3>Учимся договариваться</h3>
           <p>
             Урок 1. Замечаем конфликт: факты, чувства и то, что важно каждому.
@@ -66,14 +62,12 @@ export function Home() {
         </Link>
         <Link className="card" to="/practice">
           <span className="icon green-icon">♧</span>
-          <p className="eyebrow">Попробовать</p>
           <h3>А как поступишь ты?</h3>
           <p>Знакомая история, твои решения и время подумать.</p>
           <span>Выбрать ситуацию →</span>
         </Link>
         <Link className="card" to="/resources">
           <span className="icon peach-icon">▤</span>
-          <p className="eyebrow">Взять с собой</p>
           <h3>Подсказка под рукой</h3>
           <p>Короткая памятка для разговора. Можно распечатать.</p>
           <span>Найти памятку →</span>

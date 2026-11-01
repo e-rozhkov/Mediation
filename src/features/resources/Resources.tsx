@@ -17,7 +17,6 @@ export function Resources() {
   );
   return (
     <section>
-      <p className="eyebrow">Взять с собой</p>
       <h1>Памятки для разговора</h1>
       <p className="lead">
         Восемь коротких памяток. Читайте, скачивайте или печатайте на A4.
@@ -91,7 +90,6 @@ export function Resources() {
           {visible.map((r) => (
             <Link className="card" key={r.id} to={`/resources/${r.slug}`}>
               <ContentImage image={r.image} retry={false} />
-              <p className="eyebrow">Памятка · A4</p>
               <h2>{r.title}</h2>
               <p>{r.intro}</p>
               <span>Читать и печатать →</span>
@@ -123,7 +121,6 @@ export function Resource() {
       <div className="no-print">
         <Link to="/resources">← Памятки</Link>
       </div>
-      <p className="eyebrow">Точка диалога · Памятка</p>
       <h1>{resource.title}</h1>
       <p className="lead">{resource.intro}</p>
       <div className="no-print">
