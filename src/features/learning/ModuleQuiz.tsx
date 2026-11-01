@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { modules } from "../../lib/content";
+import { modules, quizProgressKey } from "../../lib/content";
 import { load, save, storageWarning } from "../../lib/progress";
 import { NotFound } from "../../pages/Static";
 export function ModuleQuiz() {
@@ -23,7 +23,10 @@ function Quiz({ module }: { module: (typeof modules)[number] }) {
       ...p,
       quizzes: {
         ...p.quizzes,
-        [module.slug]: Math.max(p.quizzes[module.slug] ?? 0, correct),
+        [quizProgressKey(module)]: Math.max(
+          p.quizzes[quizProgressKey(module)] ?? 0,
+          correct,
+        ),
       },
     });
     setFinished(true);

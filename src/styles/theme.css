@@ -1,3 +1,10 @@
+@font-face {
+  font-family: "Manrope";
+  src: url("/fonts/Manrope-variable.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
 :root {
   --bg: #f7fafc;
   --surface: #fff;
@@ -9,7 +16,7 @@
   --line: #dce5e9;
   --radius: 24px;
   --space: 24px;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Manrope", Arial, sans-serif;
   color: var(--text);
   background: var(--bg);
   font-synthesis: none;

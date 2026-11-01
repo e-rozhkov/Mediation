@@ -26,22 +26,48 @@ function LessonContent({ lesson }: { lesson: (typeof lessons)[number] }) {
   return (
     <article className="reading">
       <Link to="/learn">← Обучение</Link>
-      <p className="eyebrow">
-        Модуль {module.order} · Урок {lesson.order} · 7-10 лет
-      </p>
+      <p className="eyebrow">Урок {lesson.order} · 7–10 лет</p>
       <h1>{lesson.title}</h1>
       <p className="lead">{lesson.intro}</p>
       <p className="badge">Можно пройти вместе со взрослым</p>
       <ContentImage image={lesson.image} priority />
+      {lesson.sections && (
+        <details className="lesson-contents">
+          <summary>Содержание урока</summary>
+          <nav aria-label="Темы урока">
+            <ul>
+              {lesson.sections.map((section, index) => (
+                <li key={section.title}>
+                  <button
+                    className="text-button"
+                    aria-label={`Перейти к теме: ${section.title}`}
+                    aria-current={index === screen ? "step" : undefined}
+                    onClick={() => setScreen(index)}
+                  >
+                    {section.title}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </details>
+      )}
       <section className="panel" aria-label="Урок">
         <p className="eyebrow">
           {isQuestion
             ? "Проверим себя"
-            : `Мысль ${screen + 1} из ${lesson.blocks.length}`}
+            : `Тема ${screen + 1} из ${lesson.blocks.length}`}
         </p>
         {!isQuestion ? (
           <>
+            {lesson.sections && <h2>{lesson.sections[screen].title}</h2>}
             <p className="story">{lesson.blocks[screen]}</p>
+            {lesson.sections && (
+              <details className="lesson-details">
+                <summary>Разобраться подробнее</summary>
+                <p>{lesson.sections[screen].details}</p>
+              </details>
+            )}
             <div className="actions">
               <button
                 disabled={screen === 0}

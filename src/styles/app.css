@@ -788,3 +788,256 @@ details p {
     font-size: 11pt;
   }
 }
+/* Keep global navigation distinct from the breadcrumb trail. */
+.breadcrumbs {
+  display: block;
+  margin: 0 0 28px;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.breadcrumbs ol {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin: 0;
+  padding: 0;
+}
+.breadcrumbs li {
+  margin: 0;
+  min-width: 0;
+}
+.breadcrumbs li + li::before {
+  content: "/";
+  margin-right: 12px;
+  color: var(--muted);
+}
+.breadcrumbs [aria-current="page"] {
+  color: var(--text);
+}
+.home-mediation {
+  border-top: 1px solid var(--line);
+  padding: 40px 0;
+}
+.home-mediation > .eyebrow {
+  margin-bottom: 12px;
+}
+.mediation-content > .lead {
+  max-width: 100%;
+  font-size: 1rem;
+}
+.mediation-content > .content-image {
+  max-width: 540px;
+  margin: 24px auto;
+  background: transparent;
+}
+.mediation-content > .content-image img {
+  object-fit: contain;
+  aspect-ratio: auto;
+  max-height: 420px;
+}
+.mediation-content section > h2,
+.mediation-content section > h3 {
+  margin-top: 28px;
+}
+.table-wrap {
+  max-width: 100%;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  font-size: 0.95rem;
+  table-layout: fixed;
+}
+th,
+td {
+  text-align: left;
+  vertical-align: top;
+  padding: 16px;
+  border: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+thead {
+  background: var(--blue);
+}
+th:first-child {
+  width: 25%;
+}
+.content-disclosure {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  margin: 20px 0;
+  padding: 22px;
+}
+.content-disclosure > summary {
+  font-size: 1.15rem;
+}
+.content-disclosure > p {
+  margin-top: 20px;
+}
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.role-grid .panel {
+  margin: 22px 0 0;
+  padding: 20px;
+}
+.role-grid h2,
+.role-grid h3 {
+  font-size: 1.2rem;
+}
+.principles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+.principles > div {
+  border-radius: 14px;
+  padding: 20px;
+  background: var(--bg);
+}
+dt {
+  font-weight: 700;
+}
+dd {
+  margin: 8px 0 0;
+}
+.meeting-flow {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  padding: 0;
+  margin: 24px 0;
+}
+.meeting-flow li {
+  margin: 0;
+  background: var(--blue);
+  border-radius: 14px;
+  text-align: center;
+  padding: 14px 8px;
+  position: relative;
+  font-size: 0.85rem;
+}
+.meeting-flow li:nth-child(even) {
+  background: var(--green);
+}
+.meeting-flow li + li::before {
+  content: "›";
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.meeting-steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.meeting-steps > li {
+  margin: 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.meeting-steps h2,
+.meeting-steps h3 {
+  font-size: 1.15rem;
+}
+.meeting-steps p {
+  margin-bottom: 0;
+}
+.lesson-details {
+  margin: 20px 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+}
+@media (max-width: 650px) {
+  .role-grid,
+  .principles,
+  .meeting-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .content-disclosure {
+    padding: 18px;
+  }
+  .meeting-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .meeting-flow li:nth-child(3)::before {
+    content: none;
+  }
+  th,
+  td {
+    padding: 12px;
+  }
+  th:first-child {
+    width: 32%;
+  }
+}
+@media print {
+  .breadcrumbs {
+    display: none;
+  }
+}
+.lesson-contents {
+  margin: 24px 0;
+  padding: 20px;
+  background: var(--green);
+  border-radius: 18px;
+}
+.lesson-contents nav {
+  display: block;
+}
+.lesson-contents ul {
+  padding-left: 20px;
+}
+.lesson-contents li {
+  margin: 10px 0;
+}
+.lesson-contents .text-button {
+  text-align: left;
+  line-height: 1.6;
+}
+.lesson-contents [aria-current="step"] {
+  font-weight: 800;
+}
+@media (max-width: 650px) {
+  .table-wrap table,
+  .table-wrap tbody,
+  .table-wrap tr,
+  .table-wrap th,
+  .table-wrap td {
+    display: block;
+    width: 100%;
+  }
+  .table-wrap thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    clip-path: inset(50%);
+    overflow: hidden;
+  }
+  .table-wrap tr + tr {
+    margin-top: 12px;
+  }
+  .table-wrap th {
+    background: var(--blue);
+    border-bottom: 0;
+  }
+  .table-wrap td {
+    border-top: 0;
+  }
+  .table-wrap th:first-child {
+    width: 100%;
+  }
+}

@@ -1,6 +1,13 @@
+import { MediationContent } from "../components/MediationContent";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { lessons, modules, scenarios, audienceLabels } from "../lib/content";
+import {
+  lessons,
+  modules,
+  scenarios,
+  audienceLabels,
+  quizProgressKey,
+} from "../lib/content";
 import { load, resetProgress, storageWarning } from "../lib/progress";
 import { ContentImage } from "../components/ContentImage";
 import { AudienceFilter, useAudience } from "../components/AudienceFilter";
@@ -23,7 +30,7 @@ export function Learn() {
   return (
     <section>
       <p className="eyebrow">Узнать и понять</p>
-      <h1>Маленькие шаги к диалогу</h1>
+      <h1>Учимся договариваться</h1>
       <p className="lead">
         Четыре модуля: слушаем, понимаем желания и ищем общий план. Без таймера
         и оценок.
@@ -48,7 +55,7 @@ export function Learn() {
         .filter((m) => audience === "all" || m.audience.includes(audience))
         .map((m) => (
           <section className="module-section" key={m.id}>
-            <p className="eyebrow">Модуль {m.order} · 2 урока</p>
+            <p className="eyebrow">Раздел обучения · 2 урока</p>
             <h2>{m.title}</h2>
             <div className="catalog-grid">
               {m.lessons.map((slug) => {
@@ -57,7 +64,7 @@ export function Learn() {
                 return (
                   <Link className="card" key={slug} to={`/learn/${slug}`}>
                     <ContentImage image={lesson.image} retry={false} />
-                    <p className="eyebrow">Урок {lesson.order} · 7-10 лет</p>
+                    <p className="eyebrow">Урок {lesson.order} · 7–10 лет</p>
                     <h3>{lesson.title}</h3>
                     <p>{lesson.intro}</p>
                     <span>
@@ -71,7 +78,7 @@ export function Learn() {
               <Link className="button" to={`/learn/module/${m.slug}`}>
                 Три вопроса по модулю →
               </Link>
-              {progress.quizzes[m.slug] !== undefined && (
+              {progress.quizzes[quizProgressKey(m)] !== undefined && (
                 <span className="badge">Проверка пройдена</span>
               )}
             </p>
@@ -130,7 +137,7 @@ export function Practice() {
             <ContentImage image={s.image} retry={false} />
             <p className="eyebrow">
               {s.audience.includes("children")
-                ? "Детям 7-10 лет"
+                ? "Детям 7–10 лет"
                 : "Только для взрослых"}{" "}
               · {s.duration}
             </p>
@@ -150,35 +157,9 @@ export function Practice() {
 }
 export function Mediation() {
   return (
-    <article className="reading">
-      <p className="eyebrow">О медиации</p>
-      <h1>Когда рядом есть тот, кто слушает</h1>
-      <p className="lead">
-        Медиация помогает людям услышать друг друга через разговор с помощником.
-      </p>
-      <ContentImage
-        image={{
-          src: "/images/classroom.webp",
-          alt: "Учитель спокойно помогает ученице разобраться с заданием.",
-        }}
-        priority
-      />
-      <div className="panel">
-        <h2>Посредник помогает разговору</h2>
-        <p>
-          Он даёт каждому время высказаться, задаёт вопросы и помогает обсудить
-          варианты. Он не назначает виноватого. Решение выбирают участники.
-        </p>
-        <p>Разговор добровольный. Можно попросить паузу или отказаться.</p>
-      </div>
-      <aside className="note">
-        <h2>Безопасность прежде всего</h2>
-        <p>
-          Угрозы, насилие и травля требуют помощи ответственного взрослого и мер
-          защиты. Ребёнку не нужно самостоятельно примирять участников опасной
-          ситуации.
-        </p>
-      </aside>
+    <article className="reading mediation-page">
+      <h1>О медиации</h1>
+      <MediationContent />
       <Link className="button primary" to="/learn/kto-pomogaet">
         Перейти к уроку →
       </Link>
@@ -221,7 +202,7 @@ export function About() {
       <p className="eyebrow">О проекте</p>
       <h1>Точка диалога</h1>
       <p className="lead">
-        Учебный демонстрационный проект о школьной медиации для детей 7-10 лет,
+        Учебный демонстрационный проект о школьной медиации для детей 7–10 лет,
         родителей и учителей.
       </p>
       <p>
@@ -244,9 +225,9 @@ export function About() {
       </p>
       <p>
         Доступны четыре модуля обучения, восемь уроков, пять четырёхшаговых
-        кейсов и восемь памяток. Иллюстрации созданы для проекта с помощью
-        генерации изображений; фотографии реальных детей не используются. Полный
-        план развития хранится в docs/plan.md.
+        кейсов и восемь памяток. В проекте используются учебные иллюстрации, в
+        том числе изображения из предоставленного документа. Фотографии реальных
+        детей не используются. Полный план развития хранится в docs/plan.md.
       </p>
     </article>
   );

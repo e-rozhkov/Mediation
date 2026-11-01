@@ -16,6 +16,7 @@ export const lessonSchema = base.extend({
   order: z.number().int().positive(),
   adult_note: text,
   blocks: z.array(text).min(1),
+  sections: z.array(z.object({ title: text, details: text })).optional(),
   question: text,
   scenario: text,
   choices: z
@@ -93,6 +94,7 @@ export function validateGraph(s: Scenario) {
 }
 
 export const moduleSchema = base.extend({
+  version: z.number().int().positive().default(1),
   order: z.number().int().positive(),
   lessons: z.array(text).length(2),
   questions: z
@@ -104,4 +106,17 @@ export const moduleSchema = base.extend({
       }),
     )
     .length(3),
+});
+
+export const mediationPageSchema = base.extend({
+  school: text,
+  audiences: z.array(z.object({ name: text, text })).length(3),
+  roles: z.array(z.object({ name: text, text })).length(2),
+  principles_intro: text,
+  principles: z.array(z.object({ name: text, text })).length(6),
+  boundaries: text,
+  restorative: z.array(text).min(1),
+  flow: z.array(text).length(4),
+  steps: z.array(z.object({ title: text, text })).length(6),
+  ending: text,
 });

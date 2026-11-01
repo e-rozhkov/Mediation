@@ -8,16 +8,19 @@ const scenarios = read("scenarios");
 const lessons = read("lessons");
 const modules = read("modules");
 const resources = read("resources");
+const firstLesson = lessons.find((l) => l.slug === "kto-pomogaet");
 test("главная → урок → кейс → памятка, восстановление и PDF", async ({
   page,
 }) => {
   await page.goto("/");
   await page.getByRole("link", { name: "Начать учиться" }).click();
-  for (let i = 0; i < 2; i++)
+  for (let i = 0; i < firstLesson.blocks.length - 1; i++)
     await page.getByRole("button", { name: "Далее →", exact: true }).click();
   await page.getByRole("button", { name: "К вопросу →" }).click();
   await page
-    .getByRole("button", { name: "Помогает каждому высказаться" })
+    .getByRole("button", {
+      name: firstLesson.choices.find((c: any) => c.correct).text,
+    })
     .click();
   await page.getByRole("button", { name: "Завершить урок" }).click();
   await page.reload();
@@ -161,6 +164,22 @@ test("старый формат переносится, устаревшая п�
   await page.goto("/practice/obshee-zadanie");
   await expect(page.getByRole("status")).toContainText("устарела");
   await page.goto("/learn");
+  // The rewritten lesson has a new version; an old completion must not mark it done.
+  await expect(page.getByText("✓ Пройден · Повторить →")).toHaveCount(0);
+  await page.evaluate(
+    (version) =>
+      localStorage.setItem(
+        "dialogue-progress-v1",
+        JSON.stringify({
+          schema: 2,
+          lessons: { "kto-pomogaet": version },
+          quizzes: {},
+          attempts: {},
+        }),
+      ),
+    firstLesson.version,
+  );
+  await page.reload();
   await page.getByRole("button", { name: "Сбросить мой прогресс" }).click();
   await page.getByRole("button", { name: "Отмена", exact: true }).click();
   await expect(page.getByText("✓ Пройден · Повторить →")).toBeVisible();
@@ -225,6 +244,26 @@ for (const lesson of lessons)
   });
 for (const module of modules)
   test(`модуль ${module.slug}: три вопроса с пояснениями`, async ({ page }) => {
+    if (module.version > 1) {
+      await page.goto("/learn");
+      await page.evaluate(
+        (slug) =>
+          localStorage.setItem(
+            "dialogue-progress-v1",
+            JSON.stringify({
+              schema: 2,
+              lessons: {},
+              quizzes: { [slug]: 3 },
+              attempts: {},
+            }),
+          ),
+        module.slug,
+      );
+      await page.reload();
+      await expect(
+        page.getByText("Проверка пройдена", { exact: true }),
+      ).toHaveCount(0);
+    }
     await page.goto(`/learn/module/${module.slug}`);
     for (let i = 0; i < 3; i++) {
       const q = module.questions[i];
@@ -332,4 +371,92 @@ test("все памятки, изображения и PDF доступны", as
     expect(pdf.ok()).toBe(true);
     expect((await pdf.body()).subarray(0, 5).toString()).toBe("%PDF-");
   }
+});
+
+test("хлебные крошки содержат отдельную ссылку на главную", async ({
+  page,
+}) => {
+  for (const path of [
+    "/mediation",
+    "/learn",
+    "/practice",
+    "/resources",
+    "/help",
+    "/about",
+    "/learn/kto-pomogaet",
+    "/learn/module/kto-pomogaet-module",
+    "/practice/igra-na-peremene",
+    "/resources/pauza",
+    "/missing",
+  ]) {
+    await page.goto(path);
+    const crumbs = page.getByRole("navigation", { name: "Хлебные крошки" });
+    await expect(
+      crumbs.getByRole("link", { name: "Главная", exact: true }),
+    ).toHaveAttribute("href", "/");
+  }
+  await page
+    .getByRole("navigation", { name: "Хлебные крошки" })
+    .getByRole("link", { name: "Главная", exact: true })
+    .click();
+  await expect(page).toHaveURL("/");
+});
+test("материалы документа доступны на главной и в новом уроке", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await expect(
+    page.getByRole("heading", { name: "О медиации", exact: true }),
+  ).toBeVisible();
+  await page.getByText("Принципы и границы медиации", { exact: true }).click();
+  await expect(
+    page.getByRole("heading", { name: "О чём нельзя обещать молчать" }),
+  ).toBeVisible();
+  await page.getByText("Восстановительная медиация", { exact: true }).click();
+  await expect(
+    page.getByText("В некоторых конфликтах проблема не в том", {
+      exact: false,
+    }),
+  ).toBeVisible();
+  await page.getByText("Как проходит встреча", { exact: true }).click();
+  await expect(page.locator(".meeting-steps>li")).toHaveCount(6);
+  await expect(page.locator(".meeting-flow>li")).toHaveCount(4);
+  expect(await page.locator("body").innerText()).not.toContain("—");
+  await page.goto("/learn/kto-pomogaet");
+  await expect(
+    page.getByRole("heading", { name: "Замечаем конфликт", exact: true }),
+  ).toBeVisible();
+  await page.getByText("Содержание урока", { exact: true }).click();
+  await page
+    .getByRole("button", {
+      name: "Перейти к теме: Что сообщают эмоции",
+      exact: true,
+    })
+    .click();
+  await expect(
+    page.getByRole("heading", { name: "Что сообщают эмоции", exact: true }),
+  ).toBeVisible();
+  await page.getByText("Разобраться подробнее", { exact: true }).click();
+  await expect(
+    page.getByText("Эмоции помогают заметить, что ситуация имеет значение.", {
+      exact: false,
+    }),
+  ).toBeVisible();
+});
+test("локальный Manrope загружен, включая кириллицу", async ({ page }) => {
+  await page.goto("/");
+  await page.evaluate(() => document.fonts.ready);
+  expect(
+    await page.evaluate(() =>
+      document.fonts.check("400 18px Manrope", "Медиация"),
+    ),
+  ).toBe(true);
+  expect(
+    await page
+      .getByRole("heading", { level: 1 })
+      .evaluate((e) => getComputedStyle(e).fontFamily),
+  ).toContain("Manrope");
+  const response = await page.request.get("/fonts/Manrope-variable.ttf");
+  expect(response.ok()).toBe(true);
+  expect((await response.body()).length).toBeGreaterThan(100000);
 });

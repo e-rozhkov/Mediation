@@ -1,3 +1,4 @@
+import { MediationContent } from "../components/MediationContent";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { ContentImage } from "../components/ContentImage";
@@ -27,7 +28,7 @@ export function Home() {
               Попробовать игру →
             </Link>
           </div>
-          <p className="small">Для детей 7-10 лет · Можно вместе со взрослым</p>
+          <p className="small">Для детей 7–10 лет · Можно вместе со взрослым</p>
         </div>
         <div className="hero-illustration">
           <ContentImage
@@ -38,6 +39,14 @@ export function Home() {
             priority
           />
         </div>
+      </section>
+      <section
+        className="home-mediation"
+        aria-labelledby="home-mediation-title"
+      >
+        <p className="eyebrow">Понимаем друг друга</p>
+        <h2 id="home-mediation-title">О медиации</h2>
+        <MediationContent home />
       </section>
       <section className="audience">
         <div>
@@ -68,23 +77,25 @@ export function Home() {
         </p>
       </section>
       <section className="cards">
-        <Link className="card" to={`/learn?audience=${audience}`}>
+        <Link className="card" to="/learn/kto-pomogaet">
           <span className="icon">☀</span>
-          <p className="eyebrow">01 / Узнать</p>
-          <h3>Как устроен диалог</h3>
-          <p>Кто помогает договориться и почему важно слушать.</p>
+          <p className="eyebrow">Обучение</p>
+          <h3>Учимся договариваться</h3>
+          <p>
+            Урок 1. Замечаем конфликт: факты, чувства и то, что важно каждому.
+          </p>
           <span>Открыть урок →</span>
         </Link>
         <Link className="card" to={`/practice?audience=${audience}`}>
           <span className="icon green-icon">♧</span>
-          <p className="eyebrow">02 / Попробовать</p>
+          <p className="eyebrow">Попробовать</p>
           <h3>А как поступишь ты?</h3>
           <p>Знакомая история, твои решения и время подумать.</p>
           <span>Выбрать ситуацию →</span>
         </Link>
         <Link className="card" to={`/resources?audience=${audience}`}>
           <span className="icon peach-icon">▤</span>
-          <p className="eyebrow">03 / Взять с собой</p>
+          <p className="eyebrow">Взять с собой</p>
           <h3>Подсказка под рукой</h3>
           <p>Короткая памятка для разговора. Можно распечатать.</p>
           <span>Найти памятку →</span>

@@ -1,8 +1,10 @@
+import mediationData from "../content/pages/mediation.json";
 import {
   lessonSchema,
   scenarioSchema,
   resourceSchema,
   moduleSchema,
+  mediationPageSchema,
 } from "./schemas";
 export * from "./schemas";
 function parseAll<T>(
@@ -45,7 +47,15 @@ export const scenario = scenarios.find((x) => x.slug === "obshee-zadanie")!;
 export const resource = resources.find((x) => x.slug === "kak-dogovoritsya")!;
 export type Audience = "children" | "parents" | "teachers";
 export const audienceLabels: Record<Audience, string> = {
-  children: "Детям 7-10 лет",
+  children: "Детям 7–10 лет",
   parents: "Родителям",
   teachers: "Учителям",
 };
+
+export const mediationPage = mediationPageSchema.parse(mediationData);
+
+export function quizProgressKey(module: { slug: string; version: number }) {
+  return module.version === 1
+    ? module.slug
+    : `${module.slug}@${module.version}`;
+}

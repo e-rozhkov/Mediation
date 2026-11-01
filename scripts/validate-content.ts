@@ -5,6 +5,7 @@ import {
   scenarioSchema,
   resourceSchema,
   moduleSchema,
+  mediationPageSchema,
   unique,
   validateGraph,
 } from "../src/lib/schemas";
@@ -13,6 +14,7 @@ const groups = [
   ["scenarios", scenarioSchema],
   ["resources", resourceSchema],
   ["modules", moduleSchema],
+  ["pages", mediationPageSchema],
 ] as const;
 const records: Record<string, { file: string; data: any }[]> = {};
 function fileExists(path: string) {
@@ -41,7 +43,13 @@ for (const [folder, schema] of groups) {
       )
         throw Error("Нужен возраст 7–10");
       fileExists(data.image.src);
-      if ("steps" in data) validateGraph(scenarioSchema.parse(data));
+      if (
+        "sections" in data &&
+        data.sections &&
+        data.sections.length !== data.blocks.length
+      )
+        throw Error("Число тем не совпадает с числом блоков урока");
+      if (folder === "scenarios") validateGraph(scenarioSchema.parse(data));
       const questions =
         "questions" in data ? data.questions : "choices" in data ? [data] : [];
       if ("questions" in data)

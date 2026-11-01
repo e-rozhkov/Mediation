@@ -1,3 +1,4 @@
+import { Breadcrumbs } from "./Breadcrumbs";
 import { useEffect } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 export function Layout() {
@@ -26,13 +27,14 @@ export function Layout() {
         </Link>
       </header>
       <main id="main" tabIndex={-1}>
+        <Breadcrumbs />
         <Outlet />
       </main>
       <footer>
         <Link className="brand" to="/">
           Точка диалога
         </Link>
-        <p>Учимся слышать друг друга. Для детей 7-10 лет и взрослых.</p>
+        <p>Учимся слышать друг друга. Для детей 7–10 лет и взрослых.</p>
         <Link to="/about">О проекте</Link>
         <span>Учебная демонстрация · 2026</span>
       </footer>
