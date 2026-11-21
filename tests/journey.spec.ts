@@ -193,6 +193,37 @@ test("старый формат переносится, устаревшая п�
   ).toBeNull();
   await expect(page.getByText("✓ Пройден · Повторить →")).toHaveCount(0);
 });
+test("в практике можно сменить ответ до перехода к следующему шагу", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  const scenario = scenarios.find((item) => item.slug === "igra-na-peremene")!;
+  const [first, second] = scenario.steps[0].options;
+  await page.goto(`/practice/${scenario.slug}`);
+  const firstChoice = page.getByRole("button", { name: first.text, exact: true });
+  const secondChoice = page.getByRole("button", { name: second.text, exact: true });
+  const feedback = page.getByRole("status");
+  const next = page.getByRole("button", { name: "Далее →", exact: true });
+  await firstChoice.click();
+  await expect(feedback).toContainText(first.consequence);
+  await secondChoice.click();
+  await expect(firstChoice).toHaveAttribute("aria-pressed", "false");
+  await expect(secondChoice).toHaveAttribute("aria-pressed", "true");
+  await expect(feedback).toContainText(second.consequence);
+  await page.reload();
+  await expect(secondChoice).toHaveAttribute("aria-pressed", "true");
+  const feedbackBox = (await feedback.boundingBox())!;
+  const nextBox = (await next.boundingBox())!;
+  expect(nextBox.y - feedbackBox.y - feedbackBox.height).toBeGreaterThanOrEqual(16);
+  await next.click();
+  const attempt = await page.evaluate((scenarioId) => {
+    const savedProgress = Object.values(localStorage)
+      .map((value) => JSON.parse(value))
+      .find((value) => value.attempts?.[scenarioId]);
+    return savedProgress.attempts[scenarioId];
+  }, scenario.id);
+  expect(attempt.choices).toEqual([{ step: scenario.steps[0].id, option: second.id }]);
+  expect(attempt.pending).toBeNull();
+});
+
 for (const scenario of scenarios)
   test(`кейс ${scenario.slug}: четыре шага, итог, повтор`, async ({ page }) => {
     await page.goto(`/practice/${scenario.slug}`);

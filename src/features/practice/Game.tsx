@@ -76,7 +76,7 @@ function GameContent({ scenario }: { scenario: Scenario }) {
         </p>
       )}
       {step ? (
-        <section className="panel">
+        <section className="panel practice-step">
           <p className="eyebrow">
             Шаг {choices.length + 1} из {scenario.steps.length}
           </p>
@@ -91,12 +91,8 @@ function GameContent({ scenario }: { scenario: Scenario }) {
             {step.options.map((o) => (
               <button
                 key={o.id}
-                disabled={pending !== null}
                 aria-pressed={pending === o.id}
-                onClick={() => {
-                  if (pending !== null) return;
-                  persist({ ...attempt, pending: o.id });
-                }}
+                onClick={() => persist({ ...attempt, pending: o.id })}
               >
                 {o.text}
               </button>
