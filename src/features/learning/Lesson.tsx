@@ -1,3 +1,4 @@
+import { canonicalLesson } from "../../lib/aliases";
 import { useState, useRef, useLayoutEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { lessons, modules } from "../../lib/content";
@@ -6,7 +7,7 @@ import { NotFound } from "../../pages/Static";
 import { ContentImage } from "../../components/ContentImage";
 export function Lesson() {
   const { slug } = useParams();
-  const lesson = lessons.find((l) => l.slug === slug);
+  const lesson = lessons.find((l) => l.slug === canonicalLesson(slug));
   return lesson ? (
     <LessonContent key={lesson.slug} lesson={lesson} />
   ) : (
@@ -81,7 +82,9 @@ function LessonContent({ lesson }: { lesson: (typeof lessons)[number] }) {
             {lesson.sections && (
               <details className="lesson-details">
                 <summary>Разобраться подробнее</summary>
-                <p>{lesson.sections[screen].details}</p>
+                <p className="document-paragraph">
+                  {lesson.sections[screen].details}
+                </p>
               </details>
             )}
             <div className="actions">
@@ -156,7 +159,7 @@ function LessonContent({ lesson }: { lesson: (typeof lessons)[number] }) {
                   className="button primary"
                   to={`/learn/module/${module.slug}`}
                 >
-                  Три вопроса по модулю →
+                  Проверь себя →
                 </Link>
               )}
               <Link to={`/practice/${lesson.scenario}`}>

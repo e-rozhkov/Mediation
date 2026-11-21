@@ -1,0 +1,3 @@
+# PDFs and illustrations are generated binary assets.
+*.pdf binary
+*.webp binary

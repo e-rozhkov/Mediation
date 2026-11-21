@@ -1,3 +1,8 @@
+import {
+  canonicalLesson,
+  canonicalModule,
+  canonicalResource,
+} from "../lib/aliases";
 import { Link, useLocation } from "react-router-dom";
 import { lessons, modules, scenarios, resources } from "../lib/content";
 export function Breadcrumbs() {
@@ -15,12 +20,12 @@ export function Breadcrumbs() {
   const material =
     parts[0] === "learn"
       ? parts[1] === "module"
-        ? modules.find((x) => x.slug === parts[2])
-        : lessons.find((x) => x.slug === parts[1])
+        ? modules.find((x) => x.slug === canonicalModule(parts[2]))
+        : lessons.find((x) => x.slug === canonicalLesson(parts[1]))
       : parts[0] === "practice"
         ? scenarios.find((x) => x.slug === parts[1])
         : parts[0] === "resources"
-          ? resources.find((x) => x.slug === parts[1])
+          ? resources.find((x) => x.slug === canonicalResource(parts[1]))
           : undefined;
   const parent = labels[parts[0]];
   const current =

@@ -13,7 +13,7 @@
   "skill": "Попросить объяснить задание и назвать затруднение",
   "duration": "5–7 минут",
   "first_step_id": "s1",
-  "resource": "slushat",
+  "resource": "govorit-bez-obvineniya",
   "steps": [
     {
       "id": "s1",

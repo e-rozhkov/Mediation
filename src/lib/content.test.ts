@@ -9,13 +9,13 @@ import {
 } from "./content";
 import { load, save, validAttempt, KEY, resetProgress } from "./progress";
 describe("каталог и графы", () => {
-  it("содержит 4 модуля, 8 уроков, 5 кейсов и 8 памяток", () => {
+  it("содержит курс, 6 уроков, 5 кейсов и 6 памяток", () => {
     expect([
       modules.length,
       lessons.length,
       scenarios.length,
       resources.length,
-    ]).toEqual([4, 8, 5, 8]);
+    ]).toEqual([1, 6, 5, 6]);
   });
   it.each(scenarios)("$slug: все 81 пути заканчиваются за 4 шага", (s) => {
     validateGraph(s);

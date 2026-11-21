@@ -6,7 +6,12 @@ const base = z.object({
   title: text,
   audience: z.array(z.enum(["children", "parents", "teachers"])).min(1),
   intro: text,
-  image: z.object({ src: text, alt: text }),
+  image: z.object({
+    src: text,
+    alt: text,
+    width: z.number().positive().optional(),
+    height: z.number().positive().optional(),
+  }),
 });
 export const lessonSchema = base.extend({
   version: z.number().int().positive(),
@@ -53,11 +58,46 @@ export const scenarioSchema = base.extend({
     )
     .min(1),
 });
+export const imageSchema = z.object({
+  src: text,
+  alt: text,
+  width: z.number().positive().optional(),
+  height: z.number().positive().optional(),
+});
+export const contentBlockSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("paragraph"), text }),
+  z.object({ type: z.literal("note"), text }),
+  z.object({ type: z.literal("heading"), text }),
+  z.object({
+    type: z.literal("table"),
+    headers: z.array(text).min(2),
+    rows: z.array(z.array(text)).min(1),
+  }),
+  z.object({
+    type: z.literal("steps"),
+    items: z.array(z.object({ title: text, text: z.string() })).min(1),
+  }),
+  z.object({
+    type: z.literal("writing"),
+    label: text,
+    prompts: z.array(text).min(1),
+  }),
+  z.object({
+    type: z.literal("branches"),
+    title: text,
+    items: z.array(z.object({ title: text, text, result: text })).min(2),
+  }),
+  z.object({
+    type: z.literal("faq"),
+    items: z.array(z.object({ question: text, answer: text })).min(1),
+  }),
+]);
+export type ContentBlock = z.infer<typeof contentBlockSchema>;
 export const resourceSchema = base.extend({
+  image: imageSchema,
   topic: text,
-  blocks: z.array(text).min(4).max(6),
-  example: text,
-  checklist: z.array(text).min(1),
+  order: z.number().int().positive(),
+  content: z.array(contentBlockSchema).min(1),
   pdf: text,
 });
 export type Scenario = z.infer<typeof scenarioSchema>;
@@ -94,7 +134,7 @@ export function validateGraph(s: Scenario) {
 export const moduleSchema = base.extend({
   version: z.number().int().positive().default(1),
   order: z.number().int().positive(),
-  lessons: z.array(text).length(2),
+  lessons: z.array(text).min(1),
   questions: z
     .array(
       z.object({
@@ -103,18 +143,18 @@ export const moduleSchema = base.extend({
         choices: lessonSchema.shape.choices,
       }),
     )
-    .length(3),
+    .min(1),
 });
 
 export const mediationPageSchema = base.extend({
-  school: text,
-  audiences: z.array(z.object({ name: text, text })).length(3),
-  roles: z.array(z.object({ name: text, text })).length(2),
-  principles_intro: text,
-  principles: z.array(z.object({ name: text, text })).length(6),
-  boundaries: text,
-  restorative: z.array(text).min(1),
-  flow: z.array(text).length(4),
-  steps: z.array(z.object({ title: text, text })).length(6),
-  ending: text,
+  intro_more: z.array(text),
+  sections: z
+    .array(
+      z.object({
+        id: text,
+        title: text,
+        blocks: z.array(contentBlockSchema).min(1),
+      }),
+    )
+    .min(1),
 });

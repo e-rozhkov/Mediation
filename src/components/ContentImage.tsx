@@ -4,7 +4,7 @@ export function ContentImage({
   priority = false,
   retry = true,
 }: {
-  image: { src: string; alt: string };
+  image: { src: string; alt: string; width?: number; height?: number };
   priority?: boolean;
   retry?: boolean;
 }) {
@@ -33,8 +33,11 @@ export function ContentImage({
           src={image.src}
           alt={image.alt}
           loading={priority ? "eager" : "lazy"}
-          width="1536"
-          height="1024"
+          width={image.width ?? 1536}
+          height={image.height ?? 1024}
+          style={{
+            aspectRatio: `${image.width ?? 1536} / ${image.height ?? 1024}`,
+          }}
           onError={() => setFailed(true)}
         />
       )}

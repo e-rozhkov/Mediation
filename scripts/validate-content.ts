@@ -1,3 +1,8 @@
+import {
+  lessonAliases,
+  resourceAliases,
+  moduleAliases,
+} from "../src/lib/aliases";
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { resolve, relative } from "node:path";
 import {
@@ -38,7 +43,24 @@ for (const [folder, schema] of groups) {
         throw Error("Имя файла не совпадает со slug");
       records[folder].push({ file: path, data });
       fileExists(data.image.src);
+      if(folder==='pages')unique((data as any).sections.map((s:any)=>s.id),path);
+      const richBlocks =
+        "content" in data
+          ? data.content
+          : folder === "pages"
+            ? (data as any).sections.flatMap((s: any) => s.blocks)
+            : [];
+      for (const block of richBlocks)
+        if (
+          block.type === "table" &&
+          block.rows.some(
+            (row: string[]) => row.length !== block.headers.length,
+          )
+        )
+          throw Error("Число ячеек таблицы не совпадает с заголовками");
       if (
+        folder === "lessons" &&
+        "blocks" in data &&
         "sections" in data &&
         data.sections &&
         data.sections.length !== data.blocks.length
@@ -106,3 +128,11 @@ for (const { file, data } of records.modules) {
   }
 }
 console.log(`Проверено материалов: ${all.length}`);
+
+for (const [group, aliases] of [
+  ["lessons", lessonAliases],
+  ["resources", resourceAliases],
+  ["modules", moduleAliases],
+] as const)
+  for (const [old, target] of Object.entries(aliases))
+    link(group, target, `Старый адрес ${old}`);

@@ -1,3 +1,4 @@
+import { canonicalModule } from "../../lib/aliases";
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { modules, quizProgressKey } from "../../lib/content";
@@ -5,7 +6,7 @@ import { load, save, storageWarning } from "../../lib/progress";
 import { NotFound } from "../../pages/Static";
 export function ModuleQuiz() {
   const { slug } = useParams();
-  const module = modules.find((m) => m.slug === slug);
+  const module = modules.find((m) => m.slug === canonicalModule(slug));
   return module ? <Quiz key={module.slug} module={module} /> : <NotFound />;
 }
 function Quiz({ module }: { module: (typeof modules)[number] }) {
@@ -33,7 +34,7 @@ function Quiz({ module }: { module: (typeof modules)[number] }) {
   }
   return (
     <article className="reading">
-      <Link to="/learn">← Все модули</Link>
+      <Link to="/learn">← Обучение</Link>
       <h1>{module.title}</h1>
       {finished ? (
         <section className="panel">
@@ -67,7 +68,9 @@ function Quiz({ module }: { module: (typeof modules)[number] }) {
         </section>
       ) : (
         <section className="panel">
-          <p className="eyebrow">Вопрос {step + 1} из 3</p>
+          <p className="eyebrow">
+            Вопрос {step + 1} из {module.questions.length}
+          </p>
           <h2>{q.question}</h2>
           <div className="options">
             {q.choices.map((c) => (
@@ -88,9 +91,15 @@ function Quiz({ module }: { module: (typeof modules)[number] }) {
           <button
             className="button primary"
             disabled={!answer}
-            onClick={() => (step === 2 ? finish() : setStep((x) => x + 1))}
+            onClick={() =>
+              step === module.questions.length - 1
+                ? finish()
+                : setStep((x) => x + 1)
+            }
           >
-            {step === 2 ? "Завершить проверку" : "Следующий вопрос →"}
+            {step === module.questions.length - 1
+              ? "Завершить проверку"
+              : "Следующий вопрос →"}
           </button>
         </section>
       )}

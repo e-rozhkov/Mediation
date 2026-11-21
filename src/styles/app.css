@@ -1161,3 +1161,139 @@ header > nav {
 .printable > .no-print:first-child {
   margin-bottom: 24px;
 }
+.document-paragraph {
+  white-space: pre-line;
+}
+.content-blocks {
+  margin-top: 22px;
+}
+.content-blocks > h2,
+.content-blocks > h3,
+.content-blocks > h4 {
+  margin-top: 28px;
+  font-size: 1.25rem;
+}
+.document-flow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 11rem), 1fr));
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 24px 0;
+}
+.document-flow li {
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--blue);
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.document-flow li:nth-child(even) {
+  background: var(--green);
+}
+.document-flow p {
+  font-size: 0.9rem;
+  margin: 8px 0 0;
+}
+.document-branches > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.document-branches section {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--bg);
+}
+.document-table {
+  margin: 24px 0;
+}
+.document-table td,
+.document-table th {
+  white-space: pre-line;
+}
+.writing-line {
+  display: block;
+  border-bottom: 1px solid #788995;
+  min-height: 2.4em;
+  min-width: 0;
+}
+.writing-prompt {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  margin: 24px 0;
+}
+.writing-prompt > div {
+  margin: 12px 0;
+}
+.writing-prompt h3 {
+  font-size: 1.15rem;
+}
+.help-section {
+  margin: 36px 0;
+}
+@media (max-width: 650px) {
+  .document-branches > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .document-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    display: block;
+    margin-bottom: 6px;
+  }
+}
+@media print {
+  .content-blocks {
+    margin-top: 12px;
+  }
+  .content-blocks > p {
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+  .document-table table {
+    font-size: 9pt;
+  }
+  .document-table td,
+  .document-table th {
+    padding: 7px;
+  }
+  .document-flow {
+    gap: 7px;
+    margin: 12px 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .document-flow li {
+    padding: 8px;
+    font-size: 9pt;
+    break-inside: avoid;
+  }
+  .document-flow p {
+    font-size: 8pt;
+  }
+  .writing-prompt {
+    padding: 8px;
+    margin: 12px 0;
+    break-inside: avoid;
+  }
+  .writing-line {
+    min-height: 20px;
+  }
+  .content-blocks > .note {
+    padding: 10px;
+    margin: 12px 0;
+  }
+  .document-branches > div {
+    gap: 8px;
+  }
+}
+
+@media print {
+  .printable h1 { margin-bottom: 12px; }
+  .printable h2 { font-size: 14pt; margin: 14px 0 8px; }
+  .printable h3 { font-size: 12pt; margin: 12px 0 6px; }
+  .printable .small { font-size: 8pt; margin-bottom: 0; }
+}

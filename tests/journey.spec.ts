@@ -64,7 +64,10 @@ test("главная → урок → кейс → памятка, восста�
   expect((await pdf.body()).subarray(0, 4).toString()).toBe("%PDF");
   await page.reload();
   await expect(
-    page.getByRole("heading", { name: "Как договориться", exact: true }),
+    page.getByRole("heading", {
+      name: resources.find((r: any) => r.slug === "kak-dogovoritsya").title,
+      exact: true,
+    }),
   ).toBeVisible();
   const downloadPromise = page.waitForEvent("download");
   await page.getByRole("button", { name: "Скачать PDF" }).click();
@@ -224,8 +227,10 @@ for (const lesson of lessons)
     await page.goto(`/learn/${lesson.slug}`);
     for (let i = 0; i < lesson.blocks.length; i++) {
       await expect(
-        page.getByText(lesson.blocks[i], { exact: true }),
-      ).toBeVisible();
+        page
+          .getByRole("region", { name: "Урок", exact: true })
+          .locator(".story"),
+      ).toHaveText(lesson.blocks[i]);
       await page
         .getByRole("button", {
           name: i === lesson.blocks.length - 1 ? "К вопросу →" : "Далее →",
@@ -243,7 +248,7 @@ for (const lesson of lessons)
     ).toBeVisible();
   });
 for (const module of modules)
-  test(`модуль ${module.slug}: три вопроса с пояснениями`, async ({ page }) => {
+  test(`модуль ${module.slug}: все вопросы с пояснениями`, async ({ page }) => {
     if (module.version > 1) {
       await page.goto("/learn");
       await page.evaluate(
@@ -265,14 +270,17 @@ for (const module of modules)
       ).toHaveCount(0);
     }
     await page.goto(`/learn/module/${module.slug}`);
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < module.questions.length; i++) {
       const q = module.questions[i];
       const c = q.choices[0];
       await page.getByRole("button", { name: c.text, exact: true }).click();
       await expect(page.getByRole("status")).toContainText(c.explanation);
       await page
         .getByRole("button", {
-          name: i === 2 ? "Завершить проверку" : "Следующий вопрос →",
+          name:
+            i === module.questions.length - 1
+              ? "Завершить проверку"
+              : "Следующий вопрос →",
           exact: true,
         })
         .click();
@@ -298,15 +306,15 @@ test("общие каталоги без выбора аудитории, пои
   await page.goto("/practice?audience=children");
   await expect(page.locator(".catalog-grid .card")).toHaveCount(5);
   await page.goto("/resources?audience=teachers");
-  await expect(page.locator(".catalog-grid .card")).toHaveCount(8);
+  await expect(page.locator(".catalog-grid .card")).toHaveCount(6);
   await expect(page.getByRole("radio")).toHaveCount(0);
-  await page.getByRole("button", { name: "Поддержка", exact: true }).click();
+  await page.getByRole("button", { name: "О медиации", exact: true }).click();
   await expect(page.locator(".catalog-grid .card")).toHaveCount(2);
-  await page.getByRole("searchbox").fill("в классе");
+  await page.getByRole("searchbox").fill("примирительная");
   await expect(page.locator(".catalog-grid .card")).toHaveCount(1);
   await expect(
     page.getByRole("heading", {
-      name: "Как начать обсуждение разногласия в классе",
+      name: "Примирительная встреча",
     }),
   ).toBeVisible();
 });
@@ -418,8 +426,12 @@ test("материалы документа доступны на главной
     }),
   ).toBeVisible();
   await page.getByText("Как проходит встреча", { exact: true }).click();
-  await expect(page.locator(".meeting-steps>li")).toHaveCount(6);
-  await expect(page.locator(".meeting-flow>li")).toHaveCount(4);
+  await expect(
+    page.locator("#mediation-school-meeting .document-flow>li"),
+  ).toHaveCount(7);
+  await expect(
+    page.locator("#mediation-meeting .document-flow>li"),
+  ).toHaveCount(4);
   expect(await page.locator("body").innerText()).not.toContain("—");
   await page.goto("/learn/kto-pomogaet");
   await expect(
@@ -428,19 +440,15 @@ test("материалы документа доступны на главной
   await page.getByText("Содержание урока", { exact: true }).click();
   await page
     .getByRole("button", {
-      name: "Перейти к теме: Что сообщают эмоции",
+      name: "Перейти к теме: Факты и оценки",
       exact: true,
     })
     .click();
   await expect(
-    page.getByRole("heading", { name: "Что сообщают эмоции", exact: true }),
+    page.getByRole("heading", { name: "Факты и оценки", exact: true }),
   ).toBeVisible();
   await page.getByText("Разобраться подробнее", { exact: true }).click();
-  await expect(
-    page.getByText("Эмоции помогают заметить, что ситуация имеет значение.", {
-      exact: false,
-    }),
-  ).toBeVisible();
+  await expect(page.locator(".lesson-details .document-paragraph")).toContainText('Факт можно описать:');
 });
 test("локальный Manrope загружен, включая кириллицу", async ({ page }) => {
   await page.goto("/");
@@ -498,7 +506,7 @@ test("содержание урока прокручивает к теме с у
   page,
 }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto("/learn/kto-pomogaet");
+  await page.goto("/learn/pauza-i-chuvstva");
   await page.evaluate(() => document.fonts.ready);
   await page.getByText("Содержание урока", { exact: true }).click();
   const topic = page.getByRole("button", {
@@ -554,13 +562,16 @@ test("содержание урока прокручивает к теме с у
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page
     .getByRole("button", {
-      name: "Перейти к теме: Факты и оценки",
+      name: "Перейти к теме: Как говорить о переживаниях",
       exact: true,
     })
     .click();
   await expect(panel).toBeFocused();
   await expect(
-    page.getByRole("heading", { name: "Факты и оценки", exact: true }),
+    page.getByRole("heading", {
+      name: "Как говорить о переживаниях",
+      exact: true,
+    }),
   ).toBeInViewport();
 });
 test("верхнее меню остаётся на месте при прокрутке и смене разделов", async ({
@@ -602,10 +613,12 @@ test("поиск памяток, видимые темы и очистка за�
   await expect(
     page.getByRole("button", { name: "Все темы", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await expect(page.getByRole("status")).toContainText("8");
-  await page.getByRole("button", { name: "Поддержка", exact: true }).click();
+  await expect(page.getByRole("status")).toContainText("6");
+  await page.getByRole("button", { name: "О медиации", exact: true }).click();
   await expect(page.locator(".catalog-grid .card")).toHaveCount(2);
-  await page.getByRole("searchbox", { name: "Поиск памяток" }).fill("в классе");
+  await page
+    .getByRole("searchbox", { name: "Поиск памяток" })
+    .fill("примирительная");
   await expect(page.locator(".catalog-grid .card")).toHaveCount(1);
   await page
     .getByRole("button", { name: "Очистить поиск", exact: true })
@@ -619,11 +632,71 @@ test("поиск памяток, видимые темы и очистка за�
   await expect(
     page.getByRole("button", { name: "Все темы", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
-  await expect(page.locator(".catalog-grid .card")).toHaveCount(8);
+  await expect(page.locator(".catalog-grid .card")).toHaveCount(6);
   await page.getByRole("button", { name: "Чувства", exact: true }).focus();
   await page.keyboard.press("Enter");
   await expect(
     page.getByRole("button", { name: "Чувства", exact: true }),
   ).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator(".catalog-grid .card")).toHaveCount(1);
+});
+
+test("старые адреса открывают актуальные материалы и PDF", async ({ page }) => {
+  await page.goto("/learn/chto-vazhno-mne");
+  await expect(
+    page.getByRole("heading", {
+      name: "Находим несколько вариантов",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page.goto("/resources/igra-pamyatka");
+  await expect(
+    page.getByRole("heading", { name: "Понятные договорённости", exact: true }),
+  ).toBeVisible();
+  await page.goto("/learn/module/slushat-i-govorit");
+  await expect(page.getByText("Вопрос 1 из 6", { exact: true })).toBeVisible();
+  const oldPdf = await page.request.get("/pdf/igra-pamyatka.pdf");
+  const current = await page.request.get("/pdf/kak-dogovoritsya.pdf");
+  expect((await oldPdf.body()).equals(await current.body())).toBe(true);
+});
+test("расширенные таблицы, FAQ и самопроверка документа доступны без редакторских пометок", async ({
+  page,
+}) => {
+  await page.goto("/mediation");
+  await page
+    .locator("details")
+    .evaluateAll((ds) => ds.forEach((d) => (d.setAttribute("open", ""))));
+  await expect(
+    page.getByRole("table", {
+      name: "Что мешает договориться? / Чем может помочь медиация? / Как это выглядит",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Нужно ли снова дружить с другим участником", {
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Нельзя требовать от пострадавшего", { exact: false }),
+  ).toBeVisible();
+  expect(await page.locator("main").innerText()).not.toMatch(
+    /У МЕНЯ ТАБЛИЦА|ЕБАНУТАЯ|ТУПЫЕ БЕЛЫЕ/,
+  );
+  await page.goto("/help");
+  await expect(
+    page.getByRole("heading", {
+      name: "Как обратиться за помощью",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("table", {
+      name: "Кто обращается / Пример простого сообщения",
+      exact: true,
+    }),
+  ).toBeVisible();
+  await page.goto("/resources");
+  await page.getByRole("searchbox").fill("table");
+  await expect(page.getByRole("status")).toContainText("Ничего не найдено");
 });

@@ -13,7 +13,7 @@
   "skill": "Выслушать пожелания и предложить очередность",
   "duration": "5–7 минут",
   "first_step_id": "s1",
-  "resource": "igra-pamyatka",
+  "resource": "kak-dogovoritsya",
   "steps": [
     {
       "id": "s1",

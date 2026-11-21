@@ -1,4 +1,4 @@
-import { MediationContent } from "../components/MediationContent";
+import { MediationContent, HelpContent } from "../components/MediationContent";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { lessons, modules, scenarios, quizProgressKey } from "../lib/content";
@@ -26,33 +26,32 @@ export function Learn() {
         Уроки для детей и взрослых: слушаем, понимаем желания и ищем общий план.
         Без таймера и оценок.
       </p>
+      <div className="catalog-grid">
+        {[...lessons]
+          .sort((a, b) => a.order - b.order)
+          .map((lesson) => (
+            <Link className="card" key={lesson.id} to={`/learn/${lesson.slug}`}>
+              <ContentImage image={lesson.image} retry={false} />
+              <h2>{lesson.title}</h2>
+              <p>{lesson.intro}</p>
+              <span>
+                {progress.lessons[lesson.slug] === lesson.version
+                  ? "✓ Пройден · Повторить →"
+                  : "Начать урок →"}
+              </span>
+            </Link>
+          ))}
+      </div>
       {modules.map((m) => (
         <section className="module-section" key={m.id}>
           <h2>{m.title}</h2>
-          <div className="catalog-grid">
-            {m.lessons.map((slug) => {
-              const lesson = lessons.find((l) => l.slug === slug)!;
-              const done = progress.lessons[slug] === lesson.version;
-              return (
-                <Link className="card" key={slug} to={`/learn/${slug}`}>
-                  <ContentImage image={lesson.image} retry={false} />
-                  <h3>{lesson.title}</h3>
-                  <p>{lesson.intro}</p>
-                  <span>
-                    {done ? "✓ Пройден · Повторить →" : "Начать урок →"}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-          <p>
-            <Link className="button" to={`/learn/module/${m.slug}`}>
-              Три вопроса по модулю →
-            </Link>
-            {progress.quizzes[quizProgressKey(m)] !== undefined && (
-              <span className="badge">Проверка пройдена</span>
-            )}
-          </p>
+          <p>{m.intro}</p>
+          <Link className="button primary" to={`/learn/module/${m.slug}`}>
+            Начать самопроверку →
+          </Link>
+          {progress.quizzes[quizProgressKey(m)] !== undefined && (
+            <p className="badge">Проверка пройдена</p>
+          )}
         </section>
       ))}
       <aside className="note">
@@ -131,20 +130,7 @@ export function Help() {
         Если возникла трудная или небезопасная ситуация, не оставайтесь с ней
         один на один. Обратитесь за поддержкой.
       </p>
-      <ol>
-        <li>
-          Расскажите, что случилось, человеку, которому доверяете: близкому,
-          педагогу, школьному психологу или ответственному специалисту.
-        </li>
-        <li>
-          Скажите, какая помощь нужна сейчас: побыть рядом, остановить опасную
-          ситуацию, найти ответственного взрослого.
-        </li>
-        <li>
-          Если вас не услышали, обратитесь к другому человеку или ответственному
-          специалисту.
-        </li>
-      </ol>
+      <HelpContent />
       <aside className="note">
         <strong>Это демонстрационный учебный сайт.</strong>
         <p>
@@ -183,10 +169,10 @@ export function About() {
         копируются.
       </p>
       <p>
-        Доступны четыре модуля обучения, восемь уроков, пять четырёхшаговых
-        кейсов и восемь памяток. В проекте используются учебные иллюстрации, в
-        том числе изображения из предоставленного документа. Фотографии реальных
-        детей не используются. Полный план развития хранится в docs/plan.md.
+        Доступны шесть уроков с общей самопроверкой, пять четырёхшаговых кейсов
+        и шесть памяток. В проекте используются учебные иллюстрации, в том числе
+        изображения из предоставленного документа. Фотографии реальных детей не
+        используются. Полный план развития хранится в docs/plan.md.
       </p>
     </article>
   );

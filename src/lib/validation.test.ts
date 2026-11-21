@@ -47,7 +47,7 @@ it("валидация отклоняет отсутствующую иллюс�
 });
 it("валидация отклоняет дублирующийся id материала", () => {
   const r = validate((root) =>
-    edit(root, "lessons/pravila-razgovora.json", (d) => (d.id = "lesson-help")),
+    edit(root, "lessons/pauza-i-chuvstva.json", (d) => (d.id = "lesson-help")),
   );
   expect(r.status).not.toBe(0);
   expect(r.stderr).toContain("повторяющийся идентификатор");
@@ -56,8 +56,8 @@ it("валидация отклоняет ошибочную связь урок
   const r = validate((root) =>
     edit(
       root,
-      "lessons/kto-pomogaet.json",
-      (d) => (d.module = "slushat-i-govorit"),
+      "modules/kto-pomogaet-module.json",
+      (d) => (d.lessons = d.lessons.slice(1)),
     ),
   );
   expect(r.status).not.toBe(0);
