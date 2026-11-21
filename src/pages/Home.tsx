@@ -73,14 +73,6 @@ export function Home() {
           <span>Найти памятку →</span>
         </Link>
       </section>
-      <aside className="note">
-        <strong>Договариваться можно научиться.</strong>
-        <p>
-          Ему можно учиться маленькими шагами. Здесь нет таймера, оценок и
-          неправильных чувств.
-        </p>
-        <Link to="/mediation">Что такое медиация →</Link>
-      </aside>
     </>
   );
 }
