@@ -46,7 +46,7 @@ npm run dev
 
 ## Размещение
 
-`npm run build` создаёт `dist/`. В Netlify: ветка `main`, команда `npm run build`, publish directory `dist`. `public/_redirects` оставляет SPA fallback для страниц и ошибку для отсутствующих PDF, картинок, шрифтов и assets. Для другого хостинга нужны аналогичные правила.
+`npm run build` создаёт `dist/`. В Netlify: ветка `main`, команда `npm run build`, publish directory `dist`. `public/_redirects` оставляет SPA fallback для страниц и ошибку для отсутствующих PDF, картинок, шрифтов и assets. Для хостингов без поддержки `_redirects` сборка создаёт HTML-входы для всех разделов, материалов и старых адресов: `about/index.html`, `about.html` и аналогичные файлы. Обновление и прямое открытие этих страниц не требуют SPA fallback. Загружайте всю папку `dist`, включая вложенные каталоги.
 
 Используется локальный Manrope по ранее согласованной замене Circe, лицензия SIL OFL 1.1 включена в `public/fonts/OFL-Manrope.txt`. Runtime не обращается к Google Fonts. Коммерческий Circe без предоставленного веб-набора не добавлялся.
 

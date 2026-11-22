@@ -41,7 +41,7 @@ test("главная → урок → кейс → памятка, восста�
       await page.reload();
       await expect(
         page.getByRole("button", { name: answers[i], exact: true }),
-      ).toBeDisabled();
+      ).toHaveAttribute("aria-pressed", "true");
       await expect(page.getByRole("status")).toContainText("Саша предлагает");
     }
     await page

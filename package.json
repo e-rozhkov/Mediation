@@ -12,7 +12,7 @@
     "validate:content": "tsx scripts/validate-content.ts",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "build": "npm run typecheck && npm run validate:content && vite build",
+    "build": "npm run typecheck && npm run validate:content && vite build && tsx scripts/generate-static-pages.ts",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
